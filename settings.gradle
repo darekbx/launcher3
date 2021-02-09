@@ -1,0 +1,3 @@
+include ':airly'
+include ':app'
+rootProject.name = "Launcher3"
