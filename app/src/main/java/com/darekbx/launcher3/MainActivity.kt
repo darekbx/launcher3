@@ -2,9 +2,9 @@ package com.darekbx.launcher3
 
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
-import com.darekbx.airly.data.AirlyDataSource
-import com.darekbx.airly.data.InstallationRepository
-import com.darekbx.airly.interactions.ReadInstallations
+import com.darekbx.launcher3.airly.data.AirlyDataSource
+import com.darekbx.launcher3.airly.data.InstallationRepository
+import com.darekbx.launcher3.airly.data.MeasurementsRepository
 import kotlinx.coroutines.*
 
 class MainActivity : AppCompatActivity() {
@@ -15,9 +15,14 @@ class MainActivity : AppCompatActivity() {
 
         GlobalScope.launch {
             withContext(Dispatchers.IO) {
-                val source = AirlyDataSource()
-                val repo = InstallationRepository(source)
-                ReadInstallations(repo).invoke(51.0, 21.0, 3.0, 5)
+                val source = AirlyDataSource(BuildConfig.AIRLY_API_KEY)
+                val installationRepository = InstallationRepository(source)
+                val measurementsRepository = MeasurementsRepository(source)
+                val installations = installationRepository.readInstallations(52.23579007836946, 20.88571355229092, 3.0, 5)
+                val measurements = measurementsRepository.readMeasurements(installations.value!!.get(0).id)
+
+                val c = measurements.get(0).value?.current?.values?.get(0)?.name
+
             }
         }
     }
