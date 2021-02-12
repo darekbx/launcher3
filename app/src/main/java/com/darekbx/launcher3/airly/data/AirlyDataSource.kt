@@ -58,10 +58,11 @@ class AirlyDataSource(
         }
     }
 
-    override suspend fun readMeasurements(vararg installationId: Int): List<ResponseWrapper<Measurements>> {
-        return withContext(Dispatchers.IO) {
+    override suspend fun readMeasurements(
+        vararg installationId: Int,
+        measurements: suspend (ResponseWrapper<Measurements>) -> Unit) {
+        withContext(Dispatchers.IO) {
             val httpClient = OkHttpClient()
-            val measurements = mutableListOf<ResponseWrapper<Measurements>>()
 
             for (id in installationId) {
                 val httpUrl = httpUrlBase
@@ -76,15 +77,14 @@ class AirlyDataSource(
                     if (!response.isSuccessful) {
                         throw IOException("HTTP ${response.code}")
                     }
-                    val responseJson = response.body?.string() ?: throw IllegalStateException("Response is empty")
+                    val responseJson = response.body?.string()
+                        ?: throw IllegalStateException("Response is empty")
                     val measurement = gson.fromJson(responseJson, Measurements::class.java)
-                    measurements.add(ResponseWrapper(measurement))
+                    measurements(ResponseWrapper(measurement))
                 } catch (e: Exception) {
-                    measurements.add(ResponseWrapper.failed())
+                    measurements(ResponseWrapper.failed())
                 }
             }
-
-            measurements
         }
     }
 

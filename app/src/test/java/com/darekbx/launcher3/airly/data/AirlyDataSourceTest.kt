@@ -1,6 +1,8 @@
 package com.darekbx.launcher3.airly.data
 
 import com.darekbx.launcher3.CoroutineTestRule
+import com.darekbx.launcher3.airly.domain.Measurements
+import com.darekbx.launcher3.airly.domain.ResponseWrapper
 import kotlinx.coroutines.ExperimentalCoroutinesApi
 import kotlinx.coroutines.runBlocking
 import okhttp3.mockwebserver.MockResponse
@@ -54,9 +56,12 @@ class AirlyDataSourceTest {
 
         val apiKey = "api-key"
         val airlyDataSource = AirlyDataSource(apiKey, mockServer.url(""))
+        val measurements = mutableListOf<ResponseWrapper<Measurements>>()
 
         // When
-        val measurements = airlyDataSource.readMeasurements(1, 20)
+        airlyDataSource.readMeasurements(1, 20) {
+            measurements.add(it)
+        }
 
         // Then
         val request1 = mockServer.takeRequest()
