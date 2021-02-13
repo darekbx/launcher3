@@ -8,6 +8,7 @@
     tools:context=".ui.MainActivity">
 
     <fragment
+        android:id="@+id/fragment_container"
         android:layout_width="300dp"
         android:layout_height="300dp"
         app:layout_constraintTop_toTopOf="parent"
