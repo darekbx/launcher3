@@ -51,7 +51,7 @@ class AirlyDataSourceTest {
     fun `Download one valid and one failed measurement by ids`() = runBlocking {
         // Given
         val mockServer = MockWebServer()
-        mockServer.enqueue(MockResponse().setBody("{\"current\":{\"fromDateTime\":\"2021-02-11T08:48:36.413Z\",\"tillDateTime\":\"2021-02-11T09:48:36.413Z\",\"values\":[{\"name\":\"PM1\",\"value\":20.91}],\"indexes\":[{\"name\":\"AIRLY_CAQI\",\"value\":51.37,\"level\":\"MEDIUM\",\"description\":\"Good\",\"advice\":\"Protect\",\"color\":\"#EFBB0F\"}],\"standards\":[]},\"history\":[]}"))
+        mockServer.enqueue(MockResponse().setBody("{\"current\":{\"fromDateTime\":\"2021-02-11T08:48:36.413Z\",\"tillDateTime\":\"2021-02-11T09:48:36.413Z\",\"values\":[{\"name\":\"PM1\",\"value\":20.91}],\"indexes\":[{\"name\":\"AIRLY_CAQI\",\"value\":51.37,\"level\":\"MEDIUM\",\"description\":\"Good\",\"advice\":\"Protect\",\"color\":\"#EFBB0F\"}],\"standards\":[{\"name\":\"WHO\",\"pollutant\":\"PM25\",\"limit\":25.0,\"percent\":141.22,\"averaging\":\"24h\"}]},\"history\":[]}"))
         mockServer.enqueue(MockResponse().setResponseCode(500))
 
         val apiKey = "api-key"

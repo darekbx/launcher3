@@ -8,12 +8,13 @@ import android.view.ViewGroup
 import android.widget.Toast
 import androidx.fragment.app.Fragment
 import androidx.lifecycle.observe
+import com.darekbx.launcher3.R
 import com.darekbx.launcher3.databinding.FragmentAirlyBinding
 import com.darekbx.launcher3.ui.PermissionRequester
 import com.darekbx.launcher3.viewmodel.AirlyViewModel
 import org.koin.android.viewmodel.ext.android.viewModel
 
-class AirlyFragment: Fragment() {
+class AirlyFragment: Fragment(R.layout.fragment_airly) {
 
     private val airlyViewModel: AirlyViewModel by viewModel()
 
@@ -31,17 +32,21 @@ class AirlyFragment: Fragment() {
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
-
-        _binding?.refresh?.setOnClickListener {
-            permissionRequester.runWithPermissions {
-                displayMeasurements()
-            }
-        }
+        refreshOnLongClick()
     }
 
     override fun onDestroyView() {
         super.onDestroyView()
         _binding = null
+    }
+
+    private fun refreshOnLongClick() {
+        binding.root.setOnLongClickListener {
+            permissionRequester.runWithPermissions {
+                displayMeasurements()
+            }
+            false
+        }
     }
 
     private fun displayMeasurements() =
@@ -57,7 +62,15 @@ class AirlyFragment: Fragment() {
             PermissionRequester(
                     this,
                     Manifest.permission.ACCESS_FINE_LOCATION,
-                    onDenied = { Toast.makeText(requireContext(), "Denied", Toast.LENGTH_SHORT).show() },
-                    onShowRationale = { Toast.makeText(requireContext(), "Show rationale", Toast.LENGTH_SHORT).show() }
+                    onDenied = { shoRationale() },
+                    onShowRationale = { showDeniedPermissionInformation() }
             )
+
+    private fun shoRationale() {
+        Toast.makeText(requireContext(), R.string.location_permission_rationale, Toast.LENGTH_SHORT).show()
+    }
+
+    private fun showDeniedPermissionInformation() {
+        Toast.makeText(requireContext(), R.string.location_permission_denied, Toast.LENGTH_SHORT).show()
+    }
 }

@@ -1,3 +1,6 @@
 <resources>
     <string name="app_name">Launcher3</string>
+
+    <string name="location_permission_denied">Location permissions are denied, airly information will not be show.</string>
+    <string name="location_permission_rationale">Please allow location permissions.</string>
 </resources>

@@ -1,0 +1,22 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent">
+
+    <!--
+    Display index value with level and color, on expand more details
+
+    indexes:
+        - name: AIRLY_CAQI, value: 55.31, level: Medium, description: Well... It's been better., color: #EFBB0F
+    standards:
+        - name: WHO, pollutant: PM25, limit: 25, percent: 141.22
+        - name: WHO, pollutant: PM10, limit: 50, percent: 106.99
+    values: PM1, PM10, PM25, PRESSURE, HUMIDITY, TEMPERATURE
+    -->
+
+    <TextView
+        android:id="@+id/value"
+        />
+
+</LinearLayout>

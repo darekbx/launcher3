@@ -53,7 +53,7 @@ class AirlyDataSource(
                     responseJson, object: TypeToken<List<Installation>>() {}.type)
                 ResponseWrapper(installations)
             } catch (e: Exception) {
-                ResponseWrapper.failed()
+                ResponseWrapper.failed<List<Installation>>()
             }
         }
     }
