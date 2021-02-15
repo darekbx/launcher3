@@ -1,0 +1,6 @@
+ext {
+    versions = [
+            detekt        : "1.15.0",
+            kotlin        : "1.4.21",
+    ]
+}

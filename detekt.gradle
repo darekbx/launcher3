@@ -1,0 +1,27 @@
+buildscript {
+    repositories {
+        maven { url "https://plugins.gradle.org/m2/" }
+    }
+    dependencies {
+        classpath "io.gitlab.arturbosch.detekt:detekt-gradle-plugin:$versions.detekt"
+    }
+
+}
+apply plugin: "io.gitlab.arturbosch.detekt"
+
+dependencies {
+    detektPlugins "io.gitlab.arturbosch.detekt:detekt-formatting:$versions.detekt"
+}
+
+detekt {
+    input = files(projectDir)
+    config = rootProject.files("${rootProject.projectDir}/detekt.yml")
+    baseline = file("detekt-baseline.yml")
+    // Users of Gradle’s --parallel flag are encouraged to turn off the parallelism of detekt
+    // see https://arturbosch.github.io/detekt/changelog.html#120
+    parallel = false
+}
+
+tasks.withType(io.gitlab.arturbosch.detekt.Detekt).configureEach {
+    exclude "**/build/**"
+}

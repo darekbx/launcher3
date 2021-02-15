@@ -7,6 +7,7 @@ import android.view.View
 import android.view.ViewGroup
 import android.widget.Toast
 import androidx.fragment.app.Fragment
+import androidx.lifecycle.Observer
 import androidx.lifecycle.observe
 import com.darekbx.launcher3.R
 import com.darekbx.launcher3.databinding.FragmentAirlyBinding
@@ -50,9 +51,9 @@ class AirlyFragment: Fragment(R.layout.fragment_airly) {
     }
 
     private fun displayMeasurements() =
-            airlyViewModel.installations.observe(viewLifecycleOwner, { installations ->
+            airlyViewModel.installations.observe(viewLifecycleOwner, Observer { installations ->
                 val ids = installations.map { it.id }
-                airlyViewModel.measurements(*ids.toIntArray()).observe(viewLifecycleOwner, { measurments ->
+                airlyViewModel.measurements(*ids.toIntArray()).observe(viewLifecycleOwner, Observer {  measurments ->
 
 
                 })
