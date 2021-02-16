@@ -1,7 +1,10 @@
 package com.darekbx.launcher3.viewmodel
 
 import android.util.Log
-import androidx.lifecycle.*
+import androidx.lifecycle.LiveData
+import androidx.lifecycle.ViewModel
+import androidx.lifecycle.liveData
+import com.darekbx.launcher3.BuildConfig
 import com.darekbx.launcher3.LauncherApplication
 import com.darekbx.launcher3.airly.data.InstallationRepository
 import com.darekbx.launcher3.airly.data.MeasurementsRepository
@@ -14,16 +17,14 @@ class AirlyViewModel(
     val installationRepository: InstallationRepository,
     val measurementsRepository: MeasurementsRepository,
     val locationProvider: LocationProvider
-): ViewModel() {
-
-    private val MAX_DISTANCE by lazy { 3.0 } // Kilometers
-    private val MAX_RESULTS by lazy { 5 }
+) : ViewModel() {
 
     val installations: LiveData<List<Installation>> =
         liveData(Dispatchers.IO) {
             val currentLocation = locationProvider.currentLocation()
             val installationsWrapper = installationRepository.readInstallations(
-                currentLocation.first, currentLocation.second, MAX_DISTANCE, MAX_RESULTS
+                currentLocation.first, currentLocation.second,
+                BuildConfig.AIRLY_MAX_DISTANCE, BuildConfig.AIRLY_MAX_RESULTS
             )
             when {
                 installationsWrapper.value == null || installationsWrapper.hasError -> {
@@ -33,9 +34,9 @@ class AirlyViewModel(
             }
         }
 
-    fun measurements(vararg installationId: Int): LiveData<Measurements> =
+    fun measurements(installationIds: List<Int>): LiveData<Measurements> =
         liveData(Dispatchers.IO) {
-            measurementsRepository.readMeasurements(*installationId) { measurements ->
+            measurementsRepository.readMeasurements(installationIds) { measurements ->
                 when {
                     measurements.value == null || measurements.hasError -> {
                         Log.e(LauncherApplication.LOG_TAG, "Unabled to load measurements")

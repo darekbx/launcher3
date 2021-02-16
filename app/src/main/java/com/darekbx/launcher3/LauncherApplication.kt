@@ -1,7 +1,11 @@
 package com.darekbx.launcher3
 
 import android.app.Application
-import com.darekbx.launcher3.airly.data.*
+import com.darekbx.launcher3.airly.data.AirlyDataSource
+import com.darekbx.launcher3.airly.data.MeasurementsRepository
+import com.darekbx.launcher3.airly.data.MeasurementsDataSource
+import com.darekbx.launcher3.airly.data.InstallationDataSource
+import com.darekbx.launcher3.airly.data.InstallationRepository
 import com.darekbx.launcher3.location.LocationProvider
 import com.darekbx.launcher3.viewmodel.AirlyViewModel
 import org.koin.android.ext.koin.androidContext

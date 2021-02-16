@@ -5,6 +5,7 @@ plugins {
 }
 
 apply from: "$rootDir/dependencies.gradle"
+apply from: "$rootDir/detekt.gradle"
 
 android {
     compileSdkVersion 30
@@ -27,6 +28,8 @@ android {
         }
         debug {
             buildConfigField 'String', 'AIRLY_API_KEY', "\"${airlyApiKey}\""
+            buildConfigField 'int', 'AIRLY_MAX_RESULTS', "5"
+            buildConfigField 'Double', 'AIRLY_MAX_DISTANCE', "3.0"
         }
     }
     compileOptions {

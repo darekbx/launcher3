@@ -6,4 +6,5 @@ data class Index(
     val level: String,
     val description: String,
     val advice: String,
-    val color: String)
+    val color: String
+)
