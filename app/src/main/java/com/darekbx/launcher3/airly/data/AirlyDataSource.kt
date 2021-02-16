@@ -12,13 +12,13 @@ import okhttp3.HttpUrl
 import okhttp3.HttpUrl.Companion.toHttpUrl
 import okhttp3.OkHttpClient
 import okhttp3.Request
+import org.koin.android.BuildConfig
 import java.io.IOException
-import java.lang.Exception
 
 class AirlyDataSource(
     private val apiKey: String,
     private val httpUrlBase: HttpUrl = AIRLY_HOST.toHttpUrl()
-): InstallationDataSource, MeasurementsDataSource {
+) : InstallationDataSource, MeasurementsDataSource {
 
     companion object {
         private const val AIRLY_HOST = "https://airapi.airly.eu"
@@ -50,21 +50,27 @@ class AirlyDataSource(
                 val responseJson = response.body?.string()
                     ?: throw IllegalStateException("Response is empty")
                 val installations = gson.fromJson<List<Installation>>(
-                    responseJson, object: TypeToken<List<Installation>>() {}.type)
+                    responseJson, object : TypeToken<List<Installation>>() {}.type
+                )
                 ResponseWrapper(installations)
-            } catch (e: Exception) {
+            } catch (e: IllegalStateException) {
+                printDebugStackTrace(e)
+                ResponseWrapper.failed<List<Installation>>()
+            } catch (e: IOException) {
+                printDebugStackTrace(e)
                 ResponseWrapper.failed<List<Installation>>()
             }
         }
     }
 
     override suspend fun readMeasurements(
-        vararg installationId: Int,
-        measurements: suspend (ResponseWrapper<Measurements>) -> Unit) {
+        installationIds: List<Int>,
+        measurements: suspend (ResponseWrapper<Measurements>) -> Unit
+    ) {
         withContext(Dispatchers.IO) {
             val httpClient = OkHttpClient()
 
-            for (id in installationId) {
+            for (id in installationIds) {
                 val httpUrl = httpUrlBase
                     .newBuilder()
                     .addPathSegments(MEASUREMENTS_ENDPOINT)
@@ -81,10 +87,20 @@ class AirlyDataSource(
                         ?: throw IllegalStateException("Response is empty")
                     val measurement = gson.fromJson(responseJson, Measurements::class.java)
                     measurements(ResponseWrapper(measurement))
-                } catch (e: Exception) {
+                } catch (e: IllegalStateException) {
+                    printDebugStackTrace(e)
+                    measurements(ResponseWrapper.failed())
+                } catch (e: IOException) {
+                    printDebugStackTrace(e)
                     measurements(ResponseWrapper.failed())
                 }
             }
+        }
+    }
+
+    private fun printDebugStackTrace(e: Exception) {
+        if (BuildConfig.DEBUG) {
+            e.printStackTrace()
         }
     }
 
@@ -94,7 +110,6 @@ class AirlyDataSource(
         .header("Accept", "application/json")
         .header("apikey", apiKey)
         .build()
-
 
     private val gson by lazy { Gson() }
 }

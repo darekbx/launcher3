@@ -16,7 +16,6 @@ dependencies {
 detekt {
     input = files(projectDir)
     config = rootProject.files("${rootProject.projectDir}/detekt.yml")
-    baseline = file("detekt-baseline.yml")
     // Users of Gradle’s --parallel flag are encouraged to turn off the parallelism of detekt
     // see https://arturbosch.github.io/detekt/changelog.html#120
     parallel = false

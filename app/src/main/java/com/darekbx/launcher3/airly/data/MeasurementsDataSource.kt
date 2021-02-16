@@ -6,7 +6,7 @@ import com.darekbx.launcher3.airly.domain.ResponseWrapper
 interface MeasurementsDataSource {
 
     suspend fun readMeasurements(
-        vararg installationId: Int,
+        installationIds: List<Int>,
         measurements: suspend (ResponseWrapper<Measurements>) -> Unit
     )
 }
