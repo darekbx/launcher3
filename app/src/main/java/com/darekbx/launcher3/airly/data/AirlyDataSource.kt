@@ -55,10 +55,10 @@ class AirlyDataSource(
                 ResponseWrapper(installations)
             } catch (e: IllegalStateException) {
                 printDebugStackTrace(e)
-                ResponseWrapper.failed<List<Installation>>()
+                ResponseWrapper.failed()
             } catch (e: IOException) {
                 printDebugStackTrace(e)
-                ResponseWrapper.failed<List<Installation>>()
+                ResponseWrapper.failed()
             }
         }
     }
