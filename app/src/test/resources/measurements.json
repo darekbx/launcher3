@@ -1,1 +1,49 @@
-{"current":{"fromDateTime":"2021-02-11T08:48:36.413Z","tillDateTime":"2021-02-11T09:48:36.413Z","values":[{"name":"PM1","value":20.91}],"indexes":[{"name":"AIRLY_CAQI","value":51.37,"level":"MEDIUM","description":"Good","advice":"Protect","color":"#EFBB0F"}],"standards":[{"name":"WHO","pollutant":"PM25","limit":25.0,"percent":141.22,"averaging":"24h"}]},"history":[]}
+{
+  "current":{
+    "fromDateTime":"2021-02-11T08:48:36.413Z",
+    "tillDateTime":"2021-02-11T09:48:36.413Z",
+    "values":[
+      {
+        "name":"PM1",
+        "value":20.91
+      },
+      {
+        "name":"TEMPERATURE",
+        "value":-5.1
+      },
+      {
+        "name":"HUMIDITY",
+        "value":95
+      }
+    ],
+    "indexes":[
+      {
+        "name":"AIRLY_CAQI",
+        "value":51.37,
+        "level":"MEDIUM",
+        "description":"Good",
+        "advice":"Protect",
+        "color":"#EFBB0F"
+      }
+    ],
+    "standards":[
+      {
+        "name":"WHO",
+        "pollutant":"PM25",
+        "limit":25.0,
+        "percent":141.22,
+        "averaging":"24h"
+      },
+      {
+        "name":"WHO",
+        "pollutant":"PM10",
+        "limit":25.0,
+        "percent":265.29,
+        "averaging":"24h"
+      }
+    ]
+  },
+  "history":[
+
+  ]
+}

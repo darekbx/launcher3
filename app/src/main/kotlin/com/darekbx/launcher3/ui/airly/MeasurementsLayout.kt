@@ -2,11 +2,16 @@ package com.darekbx.launcher3.ui.airly
 
 import android.content.Context
 import android.util.AttributeSet
+import android.view.LayoutInflater
 import android.view.View
 import android.widget.AdapterView
+import android.widget.TextView
+import com.darekbx.launcher3.R
 
 class MeasurementsLayout(context: Context, attrs: AttributeSet?) :
     AdapterView<MeasurementsAdapter>(context, attrs) {
+
+    private lateinit var limitsView: TextView
 
     override fun onLayout(changed: Boolean, left: Int, top: Int, right: Int, bottom: Int) {
         super.onLayout(changed, left, top, right, bottom)
@@ -27,6 +32,10 @@ class MeasurementsLayout(context: Context, attrs: AttributeSet?) :
     override fun getSelectedView(): View? = null
 
     override fun setSelection(position: Int) { /* Do nothing */ }
+
+    fun updateLimits(limits: String) {
+        limitsView.setText(limits)
+    }
 
     private fun addMeasurmentsView(measurementIndex: Int): View {
         val measurementsView = adapter.getView(measurementIndex, null, this)

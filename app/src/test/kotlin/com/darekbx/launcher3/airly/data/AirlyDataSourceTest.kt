@@ -61,7 +61,13 @@ class AirlyDataSourceTest {
         // Given
         val mockServer = MockWebServer()
         readResourceFile("measurements.json")?.use {
-            mockServer.enqueue(MockResponse().setBody(Buffer().readFrom(it)))
+            val response = MockResponse()
+                .setHeader("x-ratelimit-limit-day", 1000)
+                .setHeader("x-ratelimit-remaining-day", 900)
+                .setHeader("x-ratelimit-limit-minute", 50)
+                .setHeader("x-ratelimit-remaining-minute", 10)
+                .setBody(Buffer().readFrom(it))
+            mockServer.enqueue(response)
         } ?: fail("Unable to read measurements.json file")
         mockServer.enqueue(MockResponse().setResponseCode(500))
 
@@ -79,9 +85,22 @@ class AirlyDataSourceTest {
         assertEquals("/v2/measurements/installation?installationId=1", request1.path)
         assertFalse(measurements[0].hasError)
 
-        measurements[0].value?.current?.run {
-            assertEquals(1, values.size)
-            assertEquals(1, indexes.size)
+        measurements[0].value?.run {
+            with(current) {
+                assertEquals(3, values.size)
+                assertEquals(1, indexes.size)
+            }
+
+            with(rateLimits) {
+                assertEquals(1000, dayLimit)
+                assertEquals(900, dayRemaining)
+                assertEquals(50, minuteLimit)
+                assertEquals(10, minuteRemaining)
+            }
+
+            assertEquals("-5.1°", temperature)
+            assertEquals("95%", humidity)
+            assertEquals("203%", averagePMNorm)
         }
 
         val request2 = mockServer.takeRequest()

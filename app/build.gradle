@@ -32,17 +32,27 @@ android {
             buildConfigField 'Double', 'AIRLY_MAX_DISTANCE', "3.0"
         }
     }
+
     compileOptions {
         sourceCompatibility JavaVersion.VERSION_1_8
         targetCompatibility JavaVersion.VERSION_1_8
     }
+
+    sourceSets {
+        main.java.srcDirs += 'src/main/kotlin'
+        test.java.srcDirs += 'src/test/kotlin'
+        release.java.srcDirs += 'src/release/kotlin'
+    }
+
     kotlinOptions {
         jvmTarget = '1.8'
     }
+
     buildFeatures {
         viewBinding true
         dataBinding true
     }
+
     lintOptions {
         abortOnError true
         warningsAsErrors true
@@ -70,6 +80,8 @@ dependencies {
 
     def activity_version = "1.2.0"
     implementation "androidx.activity:activity-ktx:$activity_version"
+
+    debugImplementation 'com.squareup.okhttp3:logging-interceptor:4.9.0'
 
     testImplementation 'junit:junit:4.+'
     testImplementation "com.squareup.okhttp3:mockwebserver:4.9.0"

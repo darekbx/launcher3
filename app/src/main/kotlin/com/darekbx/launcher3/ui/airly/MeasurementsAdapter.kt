@@ -7,11 +7,11 @@ import android.view.ViewGroup
 import android.widget.ArrayAdapter
 import androidx.databinding.DataBindingUtil
 import com.darekbx.launcher3.R
-import com.darekbx.launcher3.airly.domain.Measurements
+import com.darekbx.launcher3.airly.domain.DistanceMeasurements
 import com.darekbx.launcher3.databinding.AdapterMeasurmentBinding
 
 class MeasurementsAdapter(context: Context) :
-    ArrayAdapter<Measurements>(context, R.layout.adapter_measurment) {
+    ArrayAdapter<DistanceMeasurements>(context, R.layout.adapter_measurment) {
 
     override fun getView(position: Int, convertView: View?, parent: ViewGroup): View {
         val binding = when (convertView) {
@@ -20,7 +20,7 @@ class MeasurementsAdapter(context: Context) :
         } as AdapterMeasurmentBinding
 
         return binding.apply {
-            measurements = getItem(position)
+            distanceMeasurements = getItem(position)
             executePendingBindings()
         }.root
     }

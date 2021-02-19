@@ -2,12 +2,15 @@
 <layout
     xmlns:app="http://schemas.android.com/apk/res-auto">
     <data>
-        <variable name="measurements" type="com.darekbx.launcher3.airly.domain.Measurements" />
+        <variable
+            name="distanceMeasurements"
+            type="com.darekbx.launcher3.airly.domain.DistanceMeasurements" />
     </data>
     <LinearLayout
         xmlns:android="http://schemas.android.com/apk/res/android"
         android:layout_width="wrap_content"
-        android:layout_height="wrap_content">
+        android:layout_height="wrap_content"
+        android:orientation="horizontal">
 
         <!--
         Display index value with level and color, on expand more details
@@ -21,13 +24,36 @@
         -->
 
         <TextView
-            android:id="@+id/value"
+            android:id="@+id/temperature"
+            android:layout_width="28dp"
+            android:layout_height="wrap_content"
+            android:text="@{distanceMeasurements.measurements.temperature}"
+            style="@style/measurementItem"
+            />
+
+        <TextView
+            android:id="@+id/average_pm_norm"
+            android:layout_width="24dp"
+            android:layout_height="wrap_content"
+            android:text="@{distanceMeasurements.measurements.averagePMNorm}"
+            app:airlyColor="@{distanceMeasurements.measurements.airlyIndex.color}"
+            style="@style/measurementItem"
+            />
+
+        <TextView
+            android:id="@+id/humidity"
+            android:layout_width="20dp"
+            android:layout_height="wrap_content"
+            android:text="@{distanceMeasurements.measurements.humidity}"
+            style="@style/measurementItem"
+            />
+
+        <TextView
+            android:id="@+id/distance"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:text="@{measurements.measurementDescription}"
-            app:airlyColor="@{measurements.airlyIndex.color}"
-            android:textSize="7sp"
-            android:typeface="monospace"
+            android:text="@{distanceMeasurements.distanceInKm + `km`}"
+            style="@style/measurementItem"
             />
 
     </LinearLayout>

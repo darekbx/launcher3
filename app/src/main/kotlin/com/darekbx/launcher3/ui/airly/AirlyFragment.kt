@@ -57,10 +57,18 @@ class AirlyFragment : Fragment(R.layout.fragment_airly) {
 
     private fun displayMeasurements() =
         airlyViewModel.installations.observe(viewLifecycleOwner, { installations ->
-            val ids = installations.map { it.id }
-            airlyViewModel.measurements(ids).observe(
-                viewLifecycleOwner, { measurments ->
-                    measurementsAdapter.add(measurments)
+            airlyViewModel.distanceMeasurements(installations).observe(
+                viewLifecycleOwner, { distanceMeasurements ->
+                    measurementsAdapter.add(distanceMeasurements)
+
+
+                    val limitsString = distanceMeasurements.measurements.rateLimits.run {
+                        getString(
+                            R.string.airly_limits_format,
+                            dayLimit, dayRemaining, minuteLimit, minuteRemaining
+                        )
+                    }
+                    binding.limits.setText(limitsString)
                 })
         })
 
