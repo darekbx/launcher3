@@ -4,4 +4,5 @@
     <string name="location_permission_denied">Location permissions are denied, airly information will not be show.</string>
     <string name="location_permission_rationale">Please allow location permissions.</string>
     <string name="airly_limits_format">Limits: %d/%d, %d/%d</string>
+    <string name="screen_on_format">Screen on: %s</string>
 </resources>

@@ -60,8 +60,6 @@ class AirlyFragment : Fragment(R.layout.fragment_airly) {
             airlyViewModel.distanceMeasurements(installations).observe(
                 viewLifecycleOwner, { distanceMeasurements ->
                     measurementsAdapter.add(distanceMeasurements)
-
-
                     val limitsString = distanceMeasurements.measurements.rateLimits.run {
                         getString(
                             R.string.airly_limits_format,

@@ -2,11 +2,9 @@ package com.darekbx.launcher3.ui.airly
 
 import android.content.Context
 import android.util.AttributeSet
-import android.view.LayoutInflater
 import android.view.View
 import android.widget.AdapterView
 import android.widget.TextView
-import com.darekbx.launcher3.R
 
 class MeasurementsLayout(context: Context, attrs: AttributeSet?) :
     AdapterView<MeasurementsAdapter>(context, attrs) {
