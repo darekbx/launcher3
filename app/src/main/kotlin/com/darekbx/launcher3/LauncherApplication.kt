@@ -2,15 +2,10 @@ package com.darekbx.launcher3
 
 import android.app.Application
 import android.content.Context
-import androidx.core.content.ContextCompat
 import androidx.datastore.core.DataStore
 import androidx.datastore.preferences.core.Preferences
 import androidx.datastore.preferences.preferencesDataStore
-import com.darekbx.launcher3.airly.data.AirlyDataSource
-import com.darekbx.launcher3.airly.data.MeasurementsRepository
-import com.darekbx.launcher3.airly.data.MeasurementsDataSource
-import com.darekbx.launcher3.airly.data.InstallationDataSource
-import com.darekbx.launcher3.airly.data.InstallationRepository
+import com.darekbx.launcher3.airly.data.*
 import com.darekbx.launcher3.location.LocationProvider
 import com.darekbx.launcher3.screenon.ScreenOnController
 import com.darekbx.launcher3.viewmodel.AirlyViewModel
@@ -19,6 +14,9 @@ import org.koin.android.ext.koin.androidLogger
 import org.koin.android.viewmodel.dsl.viewModel
 import org.koin.core.context.startKoin
 import org.koin.dsl.module
+import timber.log.Timber
+import timber.log.Timber.DebugTree
+
 
 class LauncherApplication : Application() {
 
@@ -56,6 +54,10 @@ class LauncherApplication : Application() {
             }
             androidContext(this@LauncherApplication)
             modules(commonModule, airlyModule, viewModelModule)
+        }
+
+        if (BuildConfig.DEBUG) {
+            Timber.plant(DebugTree())
         }
     }
 }

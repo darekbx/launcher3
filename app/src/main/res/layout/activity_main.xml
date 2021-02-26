@@ -5,14 +5,23 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    tools:context=".ui.MainActivity">
+    tools:context=".ui.MainActivity"
+    android:padding="4dp">
 
-    <fragment
-        android:id="@+id/fragment_container"
+    <fragment android:id="@+id/screen_on_fragment"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         app:layout_constraintTop_toTopOf="parent"
         app:layout_constraintStart_toStartOf="parent"
+        android:name="com.darekbx.launcher3.ui.screenon.ScreenOnFragment"
+        />
+    <fragment
+        android:id="@+id/airly_fragment"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        app:layout_constraintTop_toBottomOf="@id/screen_on_fragment"
+        app:layout_constraintStart_toStartOf="parent"
+        android:layout_marginTop="8dp"
         android:name="com.darekbx.launcher3.ui.airly.AirlyFragment"
         />
 

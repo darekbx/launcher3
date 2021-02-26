@@ -11,18 +11,18 @@ import org.junit.Assert.assertEquals
 
 class ScreenOnControllerTest {
 
-    var currentSystemTime = 0L
-    var dayOfYear = 0
+    private var currentSystemTime = 0L
+    private var dayOfYear = 0
 
-    val preference: Preferences = mock {
+    private val preference: Preferences = mock {
         on { get(longPreferencesKey("dailyTimeKey")) } doReturn 0L
         on { get(intPreferencesKey("dayOfYearKey")) } doReturn 10
     }
-    val dataStore: DataStore<Preferences> = mock {
+    private val dataStore: DataStore<Preferences> = mock {
         on { data } doReturn flowOf(preference)
     }
 
-    val screenOnController = spy(ScreenOnController(dataStore, { currentSystemTime }, { dayOfYear }))
+    private val screenOnController = spy(ScreenOnController(dataStore, { currentSystemTime }, { dayOfYear }))
 
     @Test
     fun `User was present once`() = runBlocking {

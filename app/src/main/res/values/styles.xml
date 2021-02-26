@@ -5,5 +5,9 @@
         <item name="android:textSize">7sp</item>
         <item name="android:typeface">monospace</item>
     </style>
+    <style name="screenOn">
+        <item name="android:textSize">7sp</item>
+        <item name="android:typeface">monospace</item>
+    </style>
 
 </resources>
