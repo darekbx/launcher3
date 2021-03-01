@@ -9,6 +9,9 @@ import com.darekbx.launcher3.airly.data.*
 import com.darekbx.launcher3.location.LocationProvider
 import com.darekbx.launcher3.screenon.ScreenOnController
 import com.darekbx.launcher3.viewmodel.AirlyViewModel
+import com.darekbx.launcher3.viewmodel.AntistormViewModel
+import com.darekbx.launcher3.viewmodel.ScreenOnViewModel
+import com.darekbx.launcher3.viewmodel.SunriseSunsetViewModel
 import org.koin.android.ext.koin.androidContext
 import org.koin.android.ext.koin.androidLogger
 import org.koin.android.viewmodel.dsl.viewModel
@@ -16,7 +19,6 @@ import org.koin.core.context.startKoin
 import org.koin.dsl.module
 import timber.log.Timber
 import timber.log.Timber.DebugTree
-
 
 class LauncherApplication : Application() {
 
@@ -43,6 +45,9 @@ class LauncherApplication : Application() {
 
     val viewModelModule = module {
         viewModel { AirlyViewModel(get(), get(), get()) }
+        viewModel { SunriseSunsetViewModel(get()) }
+        viewModel { ScreenOnViewModel(get()) }
+        viewModel { AntistormViewModel(get()) }
     }
 
     override fun onCreate() {

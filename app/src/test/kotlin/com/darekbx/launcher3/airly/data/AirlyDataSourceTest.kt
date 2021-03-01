@@ -1,6 +1,5 @@
 package com.darekbx.launcher3.airly.data
 
-import com.darekbx.launcher3.CoroutineTestRule
 import com.darekbx.launcher3.airly.domain.Measurements
 import com.darekbx.launcher3.airly.domain.ResponseWrapper
 import kotlinx.coroutines.ExperimentalCoroutinesApi
@@ -12,14 +11,10 @@ import org.junit.Assert.assertEquals
 import org.junit.Assert.fail
 import org.junit.Assert.assertTrue
 import org.junit.Assert.assertFalse
-import org.junit.Rule
 import org.junit.Test
 
 @ExperimentalCoroutinesApi
 class AirlyDataSourceTest {
-
-    @get:Rule
-    var coroutinesTestRule = CoroutineTestRule()
 
     @Test
     fun `Download two installations`() = runBlocking {

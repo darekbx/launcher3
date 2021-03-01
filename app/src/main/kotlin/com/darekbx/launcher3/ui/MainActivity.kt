@@ -5,10 +5,8 @@ import android.content.IntentFilter
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
 import androidx.appcompat.app.AppCompatDelegate
-import ca.rmen.sunrisesunset.SunriseSunset
 import com.darekbx.launcher3.R
 import com.darekbx.launcher3.screenon.ScreenOnReceiver
-import java.util.*
 
 class MainActivity : AppCompatActivity() {
 
@@ -25,8 +23,6 @@ class MainActivity : AppCompatActivity() {
             addAction(Intent.ACTION_USER_PRESENT)
             addAction(Intent.ACTION_SCREEN_OFF)
         })
-
-        SunriseSunset.getSunriseSunset(Calendar.getInstance(), 21.0, 52.0)
     }
 
     override fun onDestroy() {

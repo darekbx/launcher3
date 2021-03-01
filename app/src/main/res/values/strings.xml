@@ -5,4 +5,6 @@
     <string name="location_permission_rationale">Please allow location permissions.</string>
     <string name="airly_limits_format">Limits: %d/%d, %d/%d</string>
     <string name="screen_on_format">Screen on: %s</string>
+    <string name="sunrise_format">Sunrise: %s</string>
+    <string name="sunset_format">Sunset: %s</string>
 </resources>
