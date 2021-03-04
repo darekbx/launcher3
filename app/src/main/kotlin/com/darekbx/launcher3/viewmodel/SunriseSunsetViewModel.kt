@@ -15,10 +15,7 @@ class SunriseSunsetViewModel(
     class SunriseSunsetData(val sunrise: String, val sunset: String)
 
     val sunriseSunset: LiveData<SunriseSunsetData> = liveData(Dispatchers.IO) {
-        val calendars = loadSunriseSunset()
-        if (calendars == null) {
-            return@liveData
-        }
+        val calendars = loadSunriseSunset() ?: return@liveData
         val sunriseSunset = SunriseSunsetData(
             sunrise = calendars[0].toFormattedTime(),
             sunset = calendars[1].toFormattedTime()
@@ -30,7 +27,7 @@ class SunriseSunsetViewModel(
         val currentLocation = locationProvider.currentLocation()
         return SunriseSunset.getSunriseSunset(
             Calendar.getInstance(),
-            currentLocation.first, currentLocation.second
+            currentLocation.latitude, currentLocation.longitude
         )
     }
 

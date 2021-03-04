@@ -1,6 +1,18 @@
 package com.darekbx.launcher3.location
 
-class LocationProvider {
+import android.annotation.SuppressLint
+import android.location.Location
+import com.google.android.gms.location.FusedLocationProviderClient
+import kotlin.coroutines.resume
+import kotlin.coroutines.suspendCoroutine
 
-    suspend fun currentLocation() = Pair(52.23178379, 20.887996553)
+class LocationProvider(
+    private val fusedLocationProviderClient: FusedLocationProviderClient
+){
+    @SuppressLint("MissingPermission")
+    suspend fun currentLocation(): Location = suspendCoroutine { continuation ->
+        fusedLocationProviderClient.lastLocation.addOnSuccessListener { location ->
+            continuation.resume(location)
+        }
+    }
 }
