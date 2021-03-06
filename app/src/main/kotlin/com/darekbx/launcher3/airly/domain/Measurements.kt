@@ -5,7 +5,7 @@ import com.darekbx.launcher3.format
 data class Measurements(val current: Current) {
 
     var installationId: Int = 0
-    lateinit var rateLimits: RateLimits
+    var rateLimits: RateLimits? = null
 
     val airlyIndex: Index
         get() = current.indexes.first()

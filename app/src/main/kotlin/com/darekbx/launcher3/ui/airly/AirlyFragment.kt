@@ -1,20 +1,18 @@
 package com.darekbx.launcher3.ui.airly
 
-import android.Manifest
 import android.database.DataSetObserver
 import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
-import android.widget.Toast
 import androidx.fragment.app.Fragment
 import com.darekbx.launcher3.R
 import com.darekbx.launcher3.databinding.FragmentAirlyBinding
-import com.darekbx.launcher3.ui.PermissionRequester
+import com.darekbx.launcher3.ui.RefreshableFragment
 import com.darekbx.launcher3.viewmodel.AirlyViewModel
 import org.koin.android.viewmodel.ext.android.viewModel
 
-class AirlyFragment : Fragment(R.layout.fragment_airly) {
+class AirlyFragment : Fragment(R.layout.fragment_airly), RefreshableFragment {
 
     private val airlyViewModel: AirlyViewModel by viewModel()
 
@@ -32,13 +30,9 @@ class AirlyFragment : Fragment(R.layout.fragment_airly) {
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
-        refreshOnLongClick()
 
         binding.measurementLayout.adapter = measurementsAdapter
-
-        permissionRequester.runWithPermissions {
-            displayMeasurements()
-        }
+        displayMeasurements()
     }
 
     override fun onDestroyView() {
@@ -46,46 +40,27 @@ class AirlyFragment : Fragment(R.layout.fragment_airly) {
         _binding = null
     }
 
-    private fun refreshOnLongClick() {
-        binding.root.setOnLongClickListener {
-            permissionRequester.runWithPermissions {
-                displayMeasurements()
-            }
-            false
-        }
+    override fun refresh() {
+        displayMeasurements()
     }
 
-    private fun displayMeasurements() =
+    private fun displayMeasurements() {
+        measurementsAdapter.clear()
         airlyViewModel.installations.observe(viewLifecycleOwner, { installations ->
             airlyViewModel.distanceMeasurements(installations).observe(
                 viewLifecycleOwner, { distanceMeasurements ->
                     measurementsAdapter.add(distanceMeasurements)
-                    val limitsString = distanceMeasurements.measurements.rateLimits.run {
+                    val limitsString = distanceMeasurements.measurements.rateLimits?.run {
                         getString(
                             R.string.airly_limits_format,
                             dayLimit, dayRemaining, minuteLimit, minuteRemaining
                         )
                     }
-                    binding.limits.setText(limitsString)
+                    if (limitsString != null) {
+                        binding.limits.setText(limitsString)
+                    }
                 })
         })
-
-    private val permissionRequester =
-        PermissionRequester(
-            this,
-            Manifest.permission.ACCESS_FINE_LOCATION,
-            onDenied = { showRationale() },
-            onShowRationale = { showDeniedPermissionInformation() }
-        )
-
-    private fun showRationale() {
-        Toast.makeText(requireContext(), R.string.location_permission_rationale, Toast.LENGTH_SHORT)
-            .show()
-    }
-
-    private fun showDeniedPermissionInformation() {
-        Toast.makeText(requireContext(), R.string.location_permission_denied, Toast.LENGTH_SHORT)
-            .show()
     }
 
     private val measurementsAdapter by lazy {

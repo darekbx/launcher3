@@ -6,9 +6,11 @@ import android.content.Intent
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
+import org.koin.core.component.KoinApiExtension
 import org.koin.core.component.KoinComponent
 import org.koin.core.component.inject
 
+@KoinApiExtension
 class ScreenOnReceiver : BroadcastReceiver(), KoinComponent {
 
     private val screenOnController: ScreenOnController by inject()

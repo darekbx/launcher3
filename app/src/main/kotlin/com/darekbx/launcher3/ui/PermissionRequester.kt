@@ -1,22 +1,22 @@
 package com.darekbx.launcher3.ui
 
+import androidx.activity.ComponentActivity
 import androidx.activity.result.contract.ActivityResultContracts
-import androidx.fragment.app.Fragment
 
 class PermissionRequester(
-    fragment: Fragment,
+    activity: ComponentActivity,
     private val permission: String,
     onDenied: () -> Unit = { },
     onShowRationale: () -> Unit = { }
 ) {
     private var onGranted: () -> Unit = { }
 
-    private val launcher = fragment.registerForActivityResult(
+    private val launcher = activity.registerForActivityResult(
         ActivityResultContracts.RequestPermission()
     ) { isGranted ->
         when {
             isGranted -> onGranted()
-            fragment.shouldShowRequestPermissionRationale(permission) -> onShowRationale()
+            activity.shouldShowRequestPermissionRationale(permission) -> onShowRationale()
             else -> onDenied()
         }
     }

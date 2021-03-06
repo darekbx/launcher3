@@ -32,7 +32,6 @@ class ScreenOnViewModelTest {
     @Test
     fun testGetScreenOn() {
         testCoroutineRule.runBlockingTest {
-
             // Given
             val screenOnController = mock<ScreenOnController> {
                 on { currentDailyTime() } doReturn flowOf(

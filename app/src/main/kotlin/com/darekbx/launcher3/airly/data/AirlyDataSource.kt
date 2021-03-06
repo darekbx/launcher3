@@ -5,6 +5,7 @@ import com.darekbx.launcher3.airly.domain.Measurements
 import com.darekbx.launcher3.airly.domain.RateLimits
 import com.darekbx.launcher3.airly.domain.ResponseWrapper
 import com.darekbx.launcher3.await
+import com.darekbx.launcher3.utils.HttpTools
 import com.google.gson.Gson
 import com.google.gson.reflect.TypeToken
 import kotlinx.coroutines.Dispatchers
@@ -19,7 +20,7 @@ import org.koin.android.BuildConfig
 import java.io.IOException
 
 class AirlyDataSource(
-    private val apiKey: String,
+    private val httpTools: AirlyHttpTools,
     private val httpUrlBase: HttpUrl = AIRLY_HOST.toHttpUrl()
 ) : InstallationDataSource, MeasurementsDataSource {
 
@@ -34,6 +35,14 @@ class AirlyDataSource(
         private const val X_RATELIMIT_REMAINING_MINUTE = "x-ratelimit-remaining-minute"
     }
 
+    class AirlyHttpTools(val apiKey: String): HttpTools() {
+        override fun buildGetRequest(httpUrl: HttpUrl): Request {
+            return super.buildGetRequest(httpUrl)
+                .newBuilder()
+                .header("apikey", apiKey).build()
+        }
+    }
+
     override suspend fun readInstallations(
         lat: Double,
         lng: Double,
@@ -41,7 +50,6 @@ class AirlyDataSource(
         maxResults: Int
     ): ResponseWrapper<List<Installation>> {
         return withContext(Dispatchers.IO) {
-            val httpClient = provideOkHttpClient()
             val httpUrl = httpUrlBase
                 .newBuilder()
                 .addPathSegments(INSTALLATIONS_ENDPOINT)
@@ -51,16 +59,10 @@ class AirlyDataSource(
                 .addQueryParameter("maxResults", "$maxResults")
                 .build()
 
-            val request = buildGetRequest(httpUrl)
-
             try {
-                val response = httpClient.newCall(request).await()
-                val responseJson = response.body?.string()
-                    ?: throw IllegalStateException("Response is empty")
-                val installations = gson.fromJson<List<Installation>>(
-                    responseJson, object : TypeToken<List<Installation>>() {}.type
-                )
-                ResponseWrapper(installations)
+                val installations = httpTools.downloadObject<List<Installation>>(
+                    httpUrl.toString(), object : TypeToken<List<Installation>>() {}.type)
+                ResponseWrapper<List<Installation>>(installations)
             } catch (e: IllegalStateException) {
                 printDebugStackTrace(e)
                 ResponseWrapper.failed()
@@ -105,7 +107,10 @@ class AirlyDataSource(
                 ?: throw IllegalStateException("Response is empty")
             val measurement = gson.fromJson(responseJson, Measurements::class.java)
             measurement.installationId = id
-            measurement.rateLimits = rateLimits
+
+            if (!rateLimits.isEmpty) {
+                measurement.rateLimits = rateLimits
+            }
 
             ResponseWrapper(measurement)
         } catch (e: IllegalStateException) {
@@ -142,7 +147,7 @@ class AirlyDataSource(
         .url(httpUrl)
         .method("GET", null)
         .header("Accept", "application/json")
-        .header("apikey", apiKey)
+        .header("apikey", httpTools.apiKey)
         .build()
 
     private val gson by lazy { Gson() }

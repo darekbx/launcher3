@@ -1,10 +1,7 @@
 package com.darekbx.launcher3.viewmodel
 
 import android.location.Location
-import androidx.lifecycle.LiveData
-import androidx.lifecycle.Transformations
-import androidx.lifecycle.ViewModel
-import androidx.lifecycle.liveData
+import androidx.lifecycle.*
 import com.darekbx.launcher3.BuildConfig
 import com.darekbx.launcher3.airly.data.InstallationRepository
 import com.darekbx.launcher3.airly.data.MeasurementsRepository

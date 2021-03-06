@@ -5,4 +5,8 @@ data class RateLimits(
     val dayRemaining: Int,
     val minuteLimit: Int,
     val minuteRemaining: Int
-)
+) {
+
+    val isEmpty: Boolean
+        get() = dayLimit == -1 && dayRemaining == -1 && minuteLimit == -1 && minuteRemaining == -1
+}

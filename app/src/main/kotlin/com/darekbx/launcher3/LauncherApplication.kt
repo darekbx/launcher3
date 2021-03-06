@@ -8,10 +8,14 @@ import androidx.datastore.preferences.preferencesDataStore
 import com.darekbx.launcher3.airly.data.*
 import com.darekbx.launcher3.location.LocationProvider
 import com.darekbx.launcher3.screenon.ScreenOnController
+import com.darekbx.launcher3.utils.HttpTools
 import com.darekbx.launcher3.viewmodel.AirlyViewModel
-import com.darekbx.launcher3.viewmodel.AntistormViewModel
+import com.darekbx.launcher3.viewmodel.WeatherViewModel
 import com.darekbx.launcher3.viewmodel.ScreenOnViewModel
 import com.darekbx.launcher3.viewmodel.SunriseSunsetViewModel
+import com.darekbx.launcher3.weather.AntistormDataSource
+import com.darekbx.launcher3.weather.RainviewerDataSource
+import com.darekbx.launcher3.weather.WeatherDataSource
 import com.google.android.gms.location.FusedLocationProviderClient
 import org.koin.android.ext.koin.androidContext
 import org.koin.android.ext.koin.androidLogger
@@ -30,14 +34,21 @@ class LauncherApplication : Application() {
     }
 
     val commonModule = module {
+        single { HttpTools() }
+        single { AirlyDataSource.AirlyHttpTools(BuildConfig.AIRLY_API_KEY) }
         single { LocationProvider(get()) }
         single { (get() as Context).dataStore }
         single { ScreenOnController(get()) }
         single { FusedLocationProviderClient(get() as Context) }
     }
 
+    val weatherModule = module {
+        single { RainviewerDataSource(get()) }
+        single { AntistormDataSource(get()) }
+    }
+
     val airlyModule = module {
-        single { AirlyDataSource(BuildConfig.AIRLY_API_KEY) }
+        single { AirlyDataSource(get()) }
         single<InstallationDataSource> { get() as AirlyDataSource }
         single<MeasurementsDataSource> { get() as AirlyDataSource }
         single { InstallationRepository(get()) }
@@ -48,7 +59,7 @@ class LauncherApplication : Application() {
         viewModel { AirlyViewModel(get(), get(), get()) }
         viewModel { SunriseSunsetViewModel(get()) }
         viewModel { ScreenOnViewModel(get()) }
-        viewModel { AntistormViewModel(get()) }
+        viewModel { WeatherViewModel(get(), get(), get()) }
     }
 
     override fun onCreate() {
@@ -59,7 +70,7 @@ class LauncherApplication : Application() {
                 androidLogger()
             }
             androidContext(this@LauncherApplication)
-            modules(commonModule, airlyModule, viewModelModule)
+            modules(commonModule, weatherModule, airlyModule, viewModelModule)
         }
 
         if (BuildConfig.DEBUG) {

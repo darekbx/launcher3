@@ -2,6 +2,7 @@ package com.darekbx.launcher3.airly.data
 
 import com.darekbx.launcher3.airly.domain.Measurements
 import com.darekbx.launcher3.airly.domain.ResponseWrapper
+import com.darekbx.launcher3.utils.HttpTools
 import kotlinx.coroutines.ExperimentalCoroutinesApi
 import kotlinx.coroutines.runBlocking
 import okhttp3.mockwebserver.MockResponse
@@ -16,6 +17,8 @@ import org.junit.Test
 @ExperimentalCoroutinesApi
 class AirlyDataSourceTest {
 
+    private val httpTools = HttpTools()
+
     @Test
     fun `Download two installations`() = runBlocking {
         // Given
@@ -25,7 +28,7 @@ class AirlyDataSourceTest {
         } ?: fail("Unable to read instsallation.json file")
 
         val apiKey = "api-key"
-        val airlyDataSource = AirlyDataSource(apiKey, mockServer.url(""))
+        val airlyDataSource = AirlyDataSource(httpTools, apiKey, mockServer.url(""))
 
         // When
         val installations = airlyDataSource.readInstallations(10.0, 20.0, 1.0, 1)
@@ -36,19 +39,21 @@ class AirlyDataSourceTest {
             "/v2/installations/nearest?lat=10.0&lng=20.0&maxDistanceKm=1.0&maxResults=1",
             request.path
         )
-        assertEquals(2, installations.value?.size)
+        installations.value?.let { responseWrapper ->
+            assertEquals(2, responseWrapper.size)
 
-        with(installations.value!![0]) {
-            assertEquals(9935, id)
-            assertEquals(52.2387, location.latitude, 0.001)
-            assertEquals(20.8952, location.longitude, 0.001)
-        }
+            with(responseWrapper[0]) {
+                assertEquals(9935, id)
+                assertEquals(52.2387, location.latitude, 0.001)
+                assertEquals(20.8952, location.longitude, 0.001)
+            }
 
-        with(installations.value!![1]) {
-            assertEquals(12040, id)
-            assertEquals(52.2502, location.latitude, 0.001)
-            assertEquals(20.9098, location.longitude, 0.001)
-        }
+            with(responseWrapper[1]) {
+                assertEquals(12040, id)
+                assertEquals(52.2502, location.latitude, 0.001)
+                assertEquals(20.9098, location.longitude, 0.001)
+            }
+        } ?: fail("Response is null")
     }
 
     @Test
@@ -67,7 +72,7 @@ class AirlyDataSourceTest {
         mockServer.enqueue(MockResponse().setResponseCode(500))
 
         val apiKey = "api-key"
-        val airlyDataSource = AirlyDataSource(apiKey, mockServer.url(""))
+        val airlyDataSource = AirlyDataSource(httpTools, apiKey, mockServer.url(""))
         val measurements = mutableListOf<ResponseWrapper<Measurements>>()
 
         // When

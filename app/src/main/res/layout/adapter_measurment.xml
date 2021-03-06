@@ -28,6 +28,7 @@
             android:layout_width="28dp"
             android:layout_height="wrap_content"
             android:text="@{distanceMeasurements.measurements.temperature}"
+            android:gravity="end"
             style="@style/measurementItem"
             />
 
@@ -36,6 +37,7 @@
             android:layout_width="24dp"
             android:layout_height="wrap_content"
             android:text="@{distanceMeasurements.measurements.averagePMNorm}"
+            android:gravity="end"
             app:airlyColor="@{distanceMeasurements.measurements.airlyIndex.color}"
             style="@style/measurementItem"
             />
@@ -45,14 +47,16 @@
             android:layout_width="20dp"
             android:layout_height="wrap_content"
             android:text="@{distanceMeasurements.measurements.humidity}"
+            android:gravity="end"
             style="@style/measurementItem"
             />
 
         <TextView
             android:id="@+id/distance"
-            android:layout_width="wrap_content"
+            android:layout_width="30dp"
             android:layout_height="wrap_content"
             android:text="@{distanceMeasurements.distanceInKm + `km`}"
+            android:gravity="end"
             style="@style/measurementItem"
             />
 

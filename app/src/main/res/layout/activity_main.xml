@@ -8,31 +8,47 @@
     tools:context=".ui.MainActivity"
     android:padding="4dp">
 
-    <fragment android:id="@+id/screen_on_fragment"
+    <androidx.fragment.app.FragmentContainerView
+        android:id="@+id/screen_on_fragment"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         app:layout_constraintTop_toTopOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         android:layout_margin="8dp"
-        android:name="com.darekbx.launcher3.ui.screenon.ScreenOnFragment"
         />
-    <fragment
+    <androidx.fragment.app.FragmentContainerView
         android:id="@+id/sunrise_sunset_fragment"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         app:layout_constraintTop_toBottomOf="@id/screen_on_fragment"
         app:layout_constraintStart_toStartOf="parent"
         android:layout_marginStart="8dp"
-        android:name="com.darekbx.launcher3.ui.sunrisesunset.SunriseSunsetFragment"
         />
-    <fragment
+    <androidx.fragment.app.FragmentContainerView
         android:id="@+id/airly_fragment"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         app:layout_constraintTop_toBottomOf="@id/sunrise_sunset_fragment"
         app:layout_constraintStart_toStartOf="parent"
         android:layout_margin="8dp"
-        android:name="com.darekbx.launcher3.ui.airly.AirlyFragment"
+        />
+    <androidx.fragment.app.FragmentContainerView
+        android:id="@+id/weather_fragment"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        app:layout_constraintTop_toTopOf="parent"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        />
+
+    <Button
+        android:id="@+id/global_refresh"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        android:text="Refresh"
         />
 
 </androidx.constraintlayout.widget.ConstraintLayout>
