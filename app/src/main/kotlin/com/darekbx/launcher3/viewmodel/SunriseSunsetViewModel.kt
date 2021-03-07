@@ -25,10 +25,13 @@ class SunriseSunsetViewModel(
 
     private suspend fun loadSunriseSunset(): Array<out Calendar>? {
         val currentLocation = locationProvider.currentLocation()
-        return SunriseSunset.getSunriseSunset(
-            Calendar.getInstance(),
-            currentLocation.latitude, currentLocation.longitude
-        )
+        if (currentLocation != null) {
+            return SunriseSunset.getSunriseSunset(
+                Calendar.getInstance(),
+                currentLocation.latitude, currentLocation.longitude
+            )
+        }
+        return null
     }
 
     private fun Calendar.toFormattedTime() = "${get(Calendar.HOUR_OF_DAY)}:${get(Calendar.MINUTE)}"

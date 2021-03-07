@@ -32,6 +32,24 @@ class AirlyFragment : Fragment(R.layout.fragment_airly), RefreshableFragment {
         super.onViewCreated(view, savedInstanceState)
 
         binding.measurementLayout.adapter = measurementsAdapter
+
+        airlyViewModel.installations.observe(viewLifecycleOwner, { installations ->
+            airlyViewModel.loadMeasurements((installations.map { it.id }))
+        })
+
+        airlyViewModel.distanceMeasurements.observe(viewLifecycleOwner, { distanceMeasurements ->
+            measurementsAdapter.add(distanceMeasurements)
+            val limitsString = distanceMeasurements.measurements.rateLimits?.run {
+                getString(
+                    R.string.airly_limits_format,
+                    dayLimit, dayRemaining, minuteLimit, minuteRemaining
+                )
+            }
+            if (limitsString != null) {
+                binding.limits.setText(limitsString)
+            }
+        })
+
         displayMeasurements()
     }
 
@@ -46,21 +64,7 @@ class AirlyFragment : Fragment(R.layout.fragment_airly), RefreshableFragment {
 
     private fun displayMeasurements() {
         measurementsAdapter.clear()
-        airlyViewModel.installations.observe(viewLifecycleOwner, { installations ->
-            airlyViewModel.distanceMeasurements(installations).observe(
-                viewLifecycleOwner, { distanceMeasurements ->
-                    measurementsAdapter.add(distanceMeasurements)
-                    val limitsString = distanceMeasurements.measurements.rateLimits?.run {
-                        getString(
-                            R.string.airly_limits_format,
-                            dayLimit, dayRemaining, minuteLimit, minuteRemaining
-                        )
-                    }
-                    if (limitsString != null) {
-                        binding.limits.setText(limitsString)
-                    }
-                })
-        })
+        airlyViewModel.loadInstallations()
     }
 
     private val measurementsAdapter by lazy {

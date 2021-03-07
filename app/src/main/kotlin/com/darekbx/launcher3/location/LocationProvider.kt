@@ -10,9 +10,11 @@ class LocationProvider(
     private val fusedLocationProviderClient: FusedLocationProviderClient
 ){
     @SuppressLint("MissingPermission")
-    suspend fun currentLocation(): Location = suspendCoroutine { continuation ->
+    suspend fun currentLocation(): Location? = suspendCoroutine { continuation ->
         fusedLocationProviderClient.lastLocation.addOnSuccessListener { location ->
-            continuation.resume(location)
+            if (location != null) {
+                continuation.resume(location)
+            }
         }
     }
 }

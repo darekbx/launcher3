@@ -8,14 +8,12 @@
         android:id="@+id/sunrise_text"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:text="a"
         style="@style/sunriseSunset"
         />
     <TextView
         android:id="@+id/sunset_text"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:text="b"
         style="@style/sunriseSunset"
         />
 </LinearLayout>

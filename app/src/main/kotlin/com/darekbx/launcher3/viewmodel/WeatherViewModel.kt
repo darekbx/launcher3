@@ -27,10 +27,13 @@ class WeatherViewModel(
             try {
                 withContext(Dispatchers.IO) {
                     val location = locationProvider.currentLocation()
-                    val rainPredictionImage = weatherDataSource(useAntiStorm).downloadRainPrediction(
-                        location.latitude, location.longitude
-                    )
-                    rainPrediction.postValue(rainPredictionImage)
+                    if (location != null) {
+                        val rainPredictionImage =
+                            weatherDataSource(useAntiStorm).downloadRainPrediction(
+                                location.latitude, location.longitude
+                            )
+                        rainPrediction.postValue(rainPredictionImage)
+                    }
                 }
             } catch (e: IOException) {
                 e.printStackTrace()
