@@ -34,5 +34,9 @@ class SunriseSunsetViewModel(
         return null
     }
 
-    private fun Calendar.toFormattedTime() = "${get(Calendar.HOUR_OF_DAY)}:${get(Calendar.MINUTE)}"
+    private fun Calendar.toFormattedTime(): String {
+        val hour = get(Calendar.HOUR_OF_DAY).toString()
+        val minute = get(Calendar.MINUTE).toString()
+        return "${hour.padStart(2, '0')}:${minute.padStart(2, '0')}"
+    }
 }

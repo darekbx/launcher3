@@ -10,7 +10,8 @@ import kotlin.coroutines.resume
 import kotlin.coroutines.suspendCoroutine
 
 class AntistormDataSource(
-    private val httpTools: HttpTools
+    private val httpTools: HttpTools,
+    private val positionMarker: PositionMarker
 ): WeatherDataSource {
 
     private annotation class AntistormName(val name: String)
@@ -25,7 +26,10 @@ class AntistormDataSource(
     )
 
     companion object {
+        private const val DRAW_MAP = false
+
         private const val BASE_URL = "https://antistorm.eu"
+        private const val MAP_URL = "$BASE_URL/map/final-map.png"
         private const val PATH_URL = "$BASE_URL/ajaxPaths.php?lastTimestamp=0&type="
         private const val RAIN_URL = "$BASE_URL/visualPhenom/{fileFront}-radar-visualPhenomenon.png"
         private const val PROBABILITIES_URL = "$BASE_URL/archive/{dir}/{file}-radar-probabilitiesImg.png"
@@ -49,8 +53,9 @@ class AntistormDataSource(
                 val rain = downloadRain(radarPaths.filesFront.first())
                 val probabilities = downloadProbabilities(radarPaths.dirs.first(), radarPaths.files.first())
                 val storm = downloadStorm(stormPaths.filesFront.first())
+                val map = downloadMap()
 
-                val outImage = mergeImages(rain, probabilities, storm)
+                val outImage = mergeImages(rain, probabilities, storm, map)
                 continuation.resume(outImage)
             } catch (e: Exception) {
                 e.printStackTrace()
@@ -60,12 +65,20 @@ class AntistormDataSource(
     private fun mergeImages(
         rainImage: Bitmap,
         probabilitiesImage: Bitmap,
-        stormImage: Bitmap
+        stormImage: Bitmap,
+        mapImage: Bitmap?
     ): Bitmap {
         val destRect = Rect(0, 0, rainImage.width, rainImage.height)
         val outImage =
             Bitmap.createBitmap(destRect.width(), destRect.height(), Bitmap.Config.ARGB_8888)
         val canvas = Canvas(outImage)
+
+        if (mapImage != null) {
+            canvas.drawBitmap(mapImage, null, destRect, null)
+        }
+
+        positionMarker.draw(777F, 459F, stormImage)
+
         canvas.drawBitmap(probabilitiesImage, null, destRect, alphaPaint)
         canvas.drawBitmap(rainImage, null, destRect, null)
         canvas.drawBitmap(stormImage, null, destRect, null)
@@ -86,6 +99,11 @@ class AntistormDataSource(
         val url = STORM_URL.replace("{fileFront}", fileFront)
         return httpTools.downloadImage(url)
     }
+
+    private fun downloadMap(): Bitmap? {
+        if (!DRAW_MAP) return null
+        return httpTools.downloadImage(MAP_URL)
+    }
     
     private fun parsePaths(paths: String): Paths {
         val lines = paths.split("<br>")
@@ -105,5 +123,5 @@ class AntistormDataSource(
         return httpTools.downloadString(url)
     }
 
-    private val alphaPaint by lazy { Paint().apply { alpha = 80 } }
+    private val alphaPaint by lazy { Paint().apply { alpha = 60 } }
 }

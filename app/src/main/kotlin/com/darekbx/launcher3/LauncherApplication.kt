@@ -14,6 +14,7 @@ import com.darekbx.launcher3.viewmodel.WeatherViewModel
 import com.darekbx.launcher3.viewmodel.ScreenOnViewModel
 import com.darekbx.launcher3.viewmodel.SunriseSunsetViewModel
 import com.darekbx.launcher3.weather.AntistormDataSource
+import com.darekbx.launcher3.weather.PositionMarker
 import com.darekbx.launcher3.weather.RainviewerDataSource
 import com.darekbx.launcher3.weather.WeatherDataSource
 import com.google.android.gms.location.FusedLocationProviderClient
@@ -43,8 +44,9 @@ class LauncherApplication : Application() {
     }
 
     val weatherModule = module {
-        single { RainviewerDataSource(get()) }
-        single { AntistormDataSource(get()) }
+        single { PositionMarker() }
+        single { RainviewerDataSource(get(), get()) }
+        single { AntistormDataSource(get(), get()) }
     }
 
     val airlyModule = module {

@@ -47,8 +47,37 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
         android:text="Refresh"
         />
+    <Button
+        android:id="@+id/settings"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toStartOf="@id/global_refresh"
+        android:text="Settings"
+        />
+
+    <com.google.android.material.switchmaterial.SwitchMaterial
+        android:id="@+id/weather_switch"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        android:checked="false"
+        />
+    <TextView
+        android:id="@+id/weather_label"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginEnd="4dp"
+        app:layout_constraintTop_toTopOf="@id/weather_switch"
+        app:layout_constraintBottom_toBottomOf="@id/weather_switch"
+        app:layout_constraintStart_toEndOf="@id/weather_switch"
+        android:text="@string/use_rainviewer"
+        style="@style/weatherLabel"
+        />
+
 
 </androidx.constraintlayout.widget.ConstraintLayout>

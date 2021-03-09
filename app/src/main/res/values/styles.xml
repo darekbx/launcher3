@@ -13,5 +13,9 @@
         <item name="android:textSize">8sp</item>
         <item name="android:typeface">monospace</item>
     </style>
+    <style name="weatherLabel">
+        <item name="android:textSize">8sp</item>
+        <item name="android:typeface">monospace</item>
+    </style>
 
 </resources>

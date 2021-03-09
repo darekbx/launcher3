@@ -1,0 +1,19 @@
+<?xml version="1.0" encoding="utf-8"?>
+<PreferenceScreen xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:android="http://schemas.android.com/apk/res/android">
+
+    <PreferenceCategory
+        android:title="@string/preferences_weather">
+        <SwitchPreferenceCompat
+            android:key="use_antistorm"
+            android:title="@string/preferences_use_antistorm"
+            android:summary="@string/preferences_use_antistorm_summary"
+            />
+        <EditTextPreference
+            android:key="rainview_zoom"
+            android:title="@string/preferences_rainview_zoom"
+            android:summary="@string/preferences_rainview_zoom_summary"
+            />
+    </PreferenceCategory>
+
+</PreferenceScreen>

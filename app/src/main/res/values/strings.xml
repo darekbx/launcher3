@@ -7,4 +7,12 @@
     <string name="screen_on_format">Screen on: %s</string>
     <string name="sunrise_format">Sunrise: %s</string>
     <string name="sunset_format">Sunset: %s</string>
+    <string name="use_antistorm">Antistorm</string>
+    <string name="use_rainviewer">RainViewer</string>
+
+    <string name="preferences_weather">Weather</string>
+    <string name="preferences_use_antistorm">Use Antistorm</string>
+    <string name="preferences_use_antistorm_summary">Set default weather source</string>
+    <string name="preferences_rainview_zoom">RainViewer zoom level</string>
+    <string name="preferences_rainview_zoom_summary">Set default zoom level of the RainViewer map</string>
 </resources>

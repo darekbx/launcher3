@@ -5,21 +5,18 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import androidx.fragment.app.Fragment
+import androidx.preference.PreferenceManager
 import com.darekbx.launcher3.R
 import com.darekbx.launcher3.databinding.FragmentWeatherBinding
 import com.darekbx.launcher3.ui.RefreshableFragment
 import com.darekbx.launcher3.viewmodel.WeatherViewModel
 import org.koin.android.viewmodel.ext.android.viewModel
-
 class WeatherFragment : Fragment(R.layout.fragment_weather), RefreshableFragment {
 
     private val weatherViewModel: WeatherViewModel by viewModel()
 
     private var _binding: FragmentWeatherBinding? = null
     private val binding get() = _binding!!
-
-    // TODO
-    private val USE_ANTISTORM = false
 
     override fun onCreateView(
         inflater: LayoutInflater,
@@ -36,7 +33,7 @@ class WeatherFragment : Fragment(R.layout.fragment_weather), RefreshableFragment
         weatherViewModel.rainPrediction.observe(viewLifecycleOwner) { rainPredictionImage ->
             binding.rainImage.setImageBitmap(rainPredictionImage)
         }
-        weatherViewModel.rainPrediction(USE_ANTISTORM)
+        weatherViewModel.rainPrediction(useAntistorm)
     }
 
     override fun onDestroyView() {
@@ -45,6 +42,13 @@ class WeatherFragment : Fragment(R.layout.fragment_weather), RefreshableFragment
     }
 
     override fun refresh() {
-        weatherViewModel.rainPrediction(USE_ANTISTORM)
+        weatherViewModel.rainPrediction(useAntistorm)
+    }
+
+    private val useAntistorm: Boolean
+        get() = settingsPreferences.getBoolean("use_antistorm", false)
+
+    private val settingsPreferences by lazy {
+        PreferenceManager.getDefaultSharedPreferences(requireContext())
     }
 }
