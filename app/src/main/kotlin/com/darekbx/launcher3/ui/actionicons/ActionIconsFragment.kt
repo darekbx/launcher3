@@ -13,7 +13,7 @@ import com.darekbx.launcher3.R
 import com.darekbx.launcher3.databinding.FragmentActionIconsBinding
 import com.darekbx.launcher3.dotpad.DotsReceiver
 
-class ActionIconsFragment : Fragment(R.layout.fragment_action_icons) {
+class ActionIconsFragment : Fragment() {
 
     private var _binding: FragmentActionIconsBinding? = null
     private val binding get() = _binding!!

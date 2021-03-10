@@ -11,7 +11,7 @@ import com.darekbx.launcher3.viewmodel.ScreenOnViewModel
 import org.koin.android.viewmodel.ext.android.viewModel
 import java.util.concurrent.TimeUnit
 
-class ScreenOnFragment : Fragment(R.layout.fragment_screen_on) {
+class ScreenOnFragment : Fragment() {
 
     private val screenOnViewModel: ScreenOnViewModel by viewModel()
 

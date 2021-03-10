@@ -12,7 +12,7 @@ import com.darekbx.launcher3.ui.RefreshableFragment
 import com.darekbx.launcher3.viewmodel.AirlyViewModel
 import org.koin.android.viewmodel.ext.android.viewModel
 
-class AirlyFragment : Fragment(R.layout.fragment_airly), RefreshableFragment {
+class AirlyFragment : Fragment(), RefreshableFragment {
 
     private val airlyViewModel: AirlyViewModel by viewModel()
 

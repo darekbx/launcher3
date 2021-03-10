@@ -10,7 +10,7 @@ import com.darekbx.launcher3.databinding.FragmentSunriseSunsetBinding
 import com.darekbx.launcher3.viewmodel.SunriseSunsetViewModel
 import org.koin.android.viewmodel.ext.android.viewModel
 
-class SunriseSunsetFragment : Fragment(R.layout.fragment_sunrise_sunset) {
+class SunriseSunsetFragment : Fragment() {
 
     private val sunriseSunsetViewModel: SunriseSunsetViewModel by viewModel()
 

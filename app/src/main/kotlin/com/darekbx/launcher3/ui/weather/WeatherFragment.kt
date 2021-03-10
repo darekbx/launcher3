@@ -11,7 +11,7 @@ import com.darekbx.launcher3.databinding.FragmentWeatherBinding
 import com.darekbx.launcher3.ui.RefreshableFragment
 import com.darekbx.launcher3.viewmodel.WeatherViewModel
 import org.koin.android.viewmodel.ext.android.viewModel
-class WeatherFragment : Fragment(R.layout.fragment_weather), RefreshableFragment {
+class WeatherFragment : Fragment(), RefreshableFragment {
 
     private val weatherViewModel: WeatherViewModel by viewModel()
 

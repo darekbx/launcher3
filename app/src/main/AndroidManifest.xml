@@ -16,18 +16,19 @@
         android:theme="@style/Theme.Launcher3">
 
         <activity
-            android:name=".ui.MainActivity"
+            android:name=".ui.DrawerActivity"
             android:screenOrientation="portrait">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
+
         <activity
             android:name=".ui.settings.SettingsActivity"
             android:screenOrientation="portrait" />
 
-        <receiver android:name=".DotsReceiver"
+        <receiver android:name=".dotpad.DotsReceiver"
             android:enabled="true"
             android:exported="true">
             <intent-filter>

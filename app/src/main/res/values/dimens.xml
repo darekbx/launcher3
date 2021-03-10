@@ -1,4 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
-    <dimen name="big_icon">62dp</dimen>
+    <dimen name="big_icon">60dp</dimen>
+    <dimen name="drawer_width">200dp</dimen>
+    <dimen name="drawer_height">340dp</dimen>
 </resources>

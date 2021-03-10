@@ -2,15 +2,16 @@ package com.darekbx.launcher3.ui
 
 import android.Manifest
 import android.content.Intent
-import android.content.IntentFilter
-import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
+import android.view.LayoutInflater
+import android.view.View
+import android.view.ViewGroup
 import android.widget.Toast
 import androidx.activity.result.contract.ActivityResultContracts
+import androidx.fragment.app.Fragment
 import androidx.preference.PreferenceManager
 import com.darekbx.launcher3.R
-import com.darekbx.launcher3.databinding.ActivityMainBinding
-import com.darekbx.launcher3.screenon.ScreenOnReceiver
+import com.darekbx.launcher3.databinding.FragmentMainBinding
 import com.darekbx.launcher3.ui.airly.AirlyFragment
 import com.darekbx.launcher3.ui.actionicons.ActionIconsFragment
 import com.darekbx.launcher3.ui.screenon.ScreenOnFragment
@@ -20,9 +21,7 @@ import com.darekbx.launcher3.ui.weather.WeatherFragment
 import org.koin.core.component.KoinApiExtension
 
 @KoinApiExtension
-class MainActivity : AppCompatActivity() {
-
-    private val screenOnReceiver by lazy { ScreenOnReceiver() }
+class MainFragment : Fragment() {
 
     private val resultLauncher = registerForActivityResult(
         ActivityResultContracts.StartActivityForResult()
@@ -32,22 +31,28 @@ class MainActivity : AppCompatActivity() {
         }
     }
 
-    private var _binding: ActivityMainBinding? = null
+    private var _binding: FragmentMainBinding? = null
     private val binding get() = _binding!!
 
-    override fun onCreate(savedInstanceState: Bundle?) {
-        super.onCreate(savedInstanceState)
+    override fun onCreateView(
+        inflater: LayoutInflater,
+        container: ViewGroup?,
+        savedInstanceState: Bundle?
+    ): View? {
+        _binding = FragmentMainBinding.inflate(inflater, container, false)
+        return binding.root
+    }
 
-        _binding = ActivityMainBinding.inflate(layoutInflater)
-        setContentView(binding.root)
+    override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
+        super.onViewCreated(view, savedInstanceState)
 
         bindGlobalRefreshButton()
         bindWeatherSwitch()
         bindSettingsButton()
 
         permissionRequester.runWithPermissions {
-            if (supportFragmentManager.fragments.isEmpty()) {
-                supportFragmentManager
+            if (childFragmentManager.fragments.isEmpty()) {
+                childFragmentManager
                     .beginTransaction()
                     .add(R.id.airly_fragment, AirlyFragment())
                     .add(R.id.weather_fragment, WeatherFragment())
@@ -57,17 +62,11 @@ class MainActivity : AppCompatActivity() {
                     .commit()
             }
         }
-
-        registerReceiver(screenOnReceiver, IntentFilter().apply {
-            addAction(Intent.ACTION_USER_PRESENT)
-            addAction(Intent.ACTION_SCREEN_OFF)
-        })
     }
 
-    override fun onDestroy() {
-        super.onDestroy()
+    override fun onDestroyView() {
+        super.onDestroyView()
         _binding = null
-        unregisterReceiver(screenOnReceiver)
     }
 
     private fun bindWeatherSwitch() {
@@ -75,7 +74,7 @@ class MainActivity : AppCompatActivity() {
         binding.weatherSwitch.setOnCheckedChangeListener { _, isChecked ->
             settingsPreferences.edit().putBoolean("use_antistorm", isChecked).apply()
             val weatherFragment =
-                supportFragmentManager.findFragmentById(R.id.weather_fragment) as WeatherFragment
+                childFragmentManager.findFragmentById(R.id.weather_fragment) as WeatherFragment
             weatherFragment.refresh()
         }
     }
@@ -97,7 +96,7 @@ class MainActivity : AppCompatActivity() {
     }
 
     private fun openSettings() {
-        resultLauncher.launch(Intent(this, SettingsActivity::class.java))
+        resultLauncher.launch(Intent(requireContext(), SettingsActivity::class.java))
     }
 
     private fun bindGlobalRefreshButton() {
@@ -107,30 +106,31 @@ class MainActivity : AppCompatActivity() {
     }
 
     private fun globalRefresh() {
-        supportFragmentManager.fragments
+        childFragmentManager.fragments
             .filter { it is RefreshableFragment }
             .forEach { (it as RefreshableFragment).refresh() }
     }
 
-    private val permissionRequester =
+    private val permissionRequester by lazy {
         PermissionRequester(
-            this,
+            requireActivity(),
             Manifest.permission.ACCESS_FINE_LOCATION,
             onDenied = { showRationale() },
             onShowRationale = { showDeniedPermissionInformation() }
         )
+    }
 
     private fun showRationale() {
-        Toast.makeText(this, R.string.location_permission_rationale, Toast.LENGTH_SHORT)
+        Toast.makeText(requireContext(), R.string.location_permission_rationale, Toast.LENGTH_SHORT)
             .show()
     }
 
     private fun showDeniedPermissionInformation() {
-        Toast.makeText(this, R.string.location_permission_denied, Toast.LENGTH_SHORT)
+        Toast.makeText(requireContext(), R.string.location_permission_denied, Toast.LENGTH_SHORT)
             .show()
     }
 
     private val settingsPreferences by lazy {
-        PreferenceManager.getDefaultSharedPreferences(this)
+        PreferenceManager.getDefaultSharedPreferences(requireContext())
     }
 }
