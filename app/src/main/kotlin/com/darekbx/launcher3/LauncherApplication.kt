@@ -5,6 +5,7 @@ import android.content.Context
 import androidx.datastore.core.DataStore
 import androidx.datastore.preferences.core.Preferences
 import androidx.datastore.preferences.preferencesDataStore
+import androidx.preference.PreferenceManager
 import com.darekbx.launcher3.airly.data.AirlyDataSource
 import com.darekbx.launcher3.airly.data.InstallationDataSource
 import com.darekbx.launcher3.airly.data.InstallationRepository
@@ -13,10 +14,7 @@ import com.darekbx.launcher3.airly.data.MeasurementsRepository
 import com.darekbx.launcher3.location.LocationProvider
 import com.darekbx.launcher3.screenon.ScreenOnController
 import com.darekbx.launcher3.utils.HttpTools
-import com.darekbx.launcher3.viewmodel.AirlyViewModel
-import com.darekbx.launcher3.viewmodel.WeatherViewModel
-import com.darekbx.launcher3.viewmodel.ScreenOnViewModel
-import com.darekbx.launcher3.viewmodel.SunriseSunsetViewModel
+import com.darekbx.launcher3.viewmodel.*
 import com.darekbx.launcher3.weather.AntistormDataSource
 import com.darekbx.launcher3.weather.PositionMarker
 import com.darekbx.launcher3.weather.RainviewerDataSource
@@ -44,6 +42,8 @@ class LauncherApplication : Application() {
         single { (get() as Context).dataStore }
         single { ScreenOnController(get()) }
         single { FusedLocationProviderClient(get() as Context) }
+        single { (get() as Context).packageManager }
+        single { PreferenceManager.getDefaultSharedPreferences(get()) }
     }
 
     val weatherModule = module {
@@ -65,6 +65,7 @@ class LauncherApplication : Application() {
         viewModel { SunriseSunsetViewModel(get()) }
         viewModel { ScreenOnViewModel(get()) }
         viewModel { WeatherViewModel(get(), get(), get()) }
+        viewModel { ApplicationsViewModel(get(), get()) }
     }
 
     override fun onCreate() {

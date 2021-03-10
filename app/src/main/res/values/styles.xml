@@ -20,4 +20,10 @@
     <style name="bigIcon">
         <item name="android:padding">16dp</item>
     </style>
+    <style name="applicationLabel">
+        <item name="android:textSize">8sp</item>
+        <item name="android:typeface">monospace</item>
+        <item name="android:lines">1</item>
+        <item name="android:ellipsize">end</item>
+    </style>
 </resources>

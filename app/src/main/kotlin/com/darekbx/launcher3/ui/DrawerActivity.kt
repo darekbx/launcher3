@@ -54,19 +54,11 @@ class DrawerActivity : AppCompatActivity(), DrawerLayout.DrawerListener {
         }
     }
 
-    override fun onDrawerSlide(drawerView: View, slideOffset: Float) {
-        
-    }
+    override fun onDrawerSlide(drawerView: View, slideOffset: Float) { }
 
-    override fun onDrawerOpened(drawerView: View) {
-        
-    }
+    override fun onDrawerOpened(drawerView: View) { }
 
-    override fun onDrawerClosed(drawerView: View) {
-        
-    }
+    override fun onDrawerClosed(drawerView: View) { }
 
-    override fun onDrawerStateChanged(newState: Int) {
-        
-    }
+    override fun onDrawerStateChanged(newState: Int) { }
 }
