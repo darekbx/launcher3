@@ -1,7 +1,10 @@
 package com.darekbx.launcher3.viewmodel
 
 import android.location.Location
-import androidx.lifecycle.*
+import androidx.lifecycle.ViewModel
+import androidx.lifecycle.MutableLiveData
+import androidx.lifecycle.viewModelScope
+import androidx.lifecycle.Transformations
 import com.darekbx.launcher3.BuildConfig
 import com.darekbx.launcher3.airly.data.InstallationRepository
 import com.darekbx.launcher3.airly.data.MeasurementsRepository
@@ -22,6 +25,10 @@ class AirlyViewModel(
     private val locationProvider: LocationProvider
 ) : ViewModel() {
 
+    companion object {
+        private const val oneKilometer = 1000
+    }
+
     private var currentLocation: Location = Location("Unknown")
 
     val installations = MutableLiveData<List<Installation>>()
@@ -32,7 +39,7 @@ class AirlyViewModel(
         var distanceToLocation = ""
         if (measurementInstallation != null) {
             val distance = distanceToInstallation(measurementInstallation.location)
-            distanceToLocation = (distance / 1000).format(1)
+            distanceToLocation = (distance / oneKilometer).format(1)
         }
         DistanceMeasurements(measurement, distanceToLocation)
     })

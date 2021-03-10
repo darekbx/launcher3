@@ -8,7 +8,7 @@ import kotlin.coroutines.suspendCoroutine
 
 class LocationProvider(
     private val fusedLocationProviderClient: FusedLocationProviderClient
-){
+) {
     @SuppressLint("MissingPermission")
     suspend fun currentLocation(): Location? = suspendCoroutine { continuation ->
         fusedLocationProviderClient.lastLocation.addOnSuccessListener { location ->

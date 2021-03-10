@@ -12,11 +12,14 @@ import com.darekbx.launcher3.R
 import com.darekbx.launcher3.databinding.ActivityMainBinding
 import com.darekbx.launcher3.screenon.ScreenOnReceiver
 import com.darekbx.launcher3.ui.airly.AirlyFragment
+import com.darekbx.launcher3.ui.actionicons.ActionIconsFragment
 import com.darekbx.launcher3.ui.screenon.ScreenOnFragment
 import com.darekbx.launcher3.ui.settings.SettingsActivity
 import com.darekbx.launcher3.ui.sunrisesunset.SunriseSunsetFragment
 import com.darekbx.launcher3.ui.weather.WeatherFragment
+import org.koin.core.component.KoinApiExtension
 
+@KoinApiExtension
 class MainActivity : AppCompatActivity() {
 
     private val screenOnReceiver by lazy { ScreenOnReceiver() }
@@ -50,6 +53,7 @@ class MainActivity : AppCompatActivity() {
                     .add(R.id.weather_fragment, WeatherFragment())
                     .add(R.id.sunrise_sunset_fragment, SunriseSunsetFragment())
                     .add(R.id.screen_on_fragment, ScreenOnFragment())
+                    .add(R.id.main_icons_fragment, ActionIconsFragment())
                     .commit()
             }
         }
@@ -68,7 +72,8 @@ class MainActivity : AppCompatActivity() {
 
     private fun bindWeatherSwitch() {
         setWeatherSwitchState()
-        binding.weatherSwitch.setOnCheckedChangeListener { buttonView, isChecked ->
+        binding.weatherSwitch.setOnCheckedChangeListener { _, isChecked ->
+            settingsPreferences.edit().putBoolean("use_antistorm", isChecked).apply()
             val weatherFragment =
                 supportFragmentManager.findFragmentById(R.id.weather_fragment) as WeatherFragment
             weatherFragment.refresh()

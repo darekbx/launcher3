@@ -1,8 +1,16 @@
 package com.darekbx.launcher3.screenon
 
 import androidx.datastore.core.DataStore
-import androidx.datastore.preferences.core.*
-import com.nhaarman.mockitokotlin2.*
+import androidx.datastore.preferences.core.Preferences
+import androidx.datastore.preferences.core.longPreferencesKey
+import androidx.datastore.preferences.core.intPreferencesKey
+import com.nhaarman.mockitokotlin2.mock
+import com.nhaarman.mockitokotlin2.doReturn
+import com.nhaarman.mockitokotlin2.spy
+import com.nhaarman.mockitokotlin2.verify
+import com.nhaarman.mockitokotlin2.times
+import com.nhaarman.mockitokotlin2.argumentCaptor
+import com.nhaarman.mockitokotlin2.eq
 import kotlinx.coroutines.flow.collect
 import kotlinx.coroutines.flow.flowOf
 import kotlinx.coroutines.runBlocking
@@ -32,7 +40,7 @@ class ScreenOnControllerTest {
         // When
         screenOnController.currentDailyTime().collect { }
 
-        // Then
+        // ThendoReturn
         verify(screenOnController, times(1)).saveDailyTime(eq(4000L))
         verify(screenOnController, times(1)).saveDayOfYear(eq(10))
     }
@@ -72,7 +80,7 @@ class ScreenOnControllerTest {
         assertEquals(11, dayOfYearCaptor.secondValue)
     }
 
-    private suspend fun notifyUser(day: Int, userPresentTime:Long, screenOfTime: Long) {
+    private suspend fun notifyUser(day: Int, userPresentTime: Long, screenOfTime: Long) {
         dayOfYear = day
         currentSystemTime = userPresentTime
         screenOnController.notifyUserPresent()

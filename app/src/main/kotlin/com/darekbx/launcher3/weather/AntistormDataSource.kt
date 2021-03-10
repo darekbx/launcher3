@@ -5,14 +5,14 @@ import android.graphics.Canvas
 import android.graphics.Paint
 import android.graphics.Rect
 import com.darekbx.launcher3.utils.HttpTools
-import java.lang.Exception
+import java.io.IOException
 import kotlin.coroutines.resume
 import kotlin.coroutines.suspendCoroutine
 
 class AntistormDataSource(
     private val httpTools: HttpTools,
     private val positionMarker: PositionMarker
-): WeatherDataSource {
+) : WeatherDataSource {
 
     private annotation class AntistormName(val name: String)
 
@@ -27,13 +27,16 @@ class AntistormDataSource(
 
     companion object {
         private const val DRAW_MAP = false
+        private const val PROBABILITY_ALPHA = 60
 
         private const val BASE_URL = "https://antistorm.eu"
         private const val MAP_URL = "$BASE_URL/map/final-map.png"
         private const val PATH_URL = "$BASE_URL/ajaxPaths.php?lastTimestamp=0&type="
         private const val RAIN_URL = "$BASE_URL/visualPhenom/{fileFront}-radar-visualPhenomenon.png"
-        private const val PROBABILITIES_URL = "$BASE_URL/archive/{dir}/{file}-radar-probabilitiesImg.png"
-        private const val STORM_URL = "$BASE_URL/visualPhenom/{fileFront}-storm-visualPhenomenon.png"
+        private const val PROBABILITIES_URL =
+            "$BASE_URL/archive/{dir}/{file}-radar-probabilitiesImg.png"
+        private const val STORM_URL =
+            "$BASE_URL/visualPhenom/{fileFront}-storm-visualPhenomenon.png"
         private const val TYPE_RADAR = "radar"
         private const val TYPE_STORM = "storm"
         private const val DIRS_NAME = "nazwa_folderu"
@@ -51,13 +54,14 @@ class AntistormDataSource(
                 val stormPaths = parsePaths(stormPathsString)
 
                 val rain = downloadRain(radarPaths.filesFront.first())
-                val probabilities = downloadProbabilities(radarPaths.dirs.first(), radarPaths.files.first())
+                val probabilities =
+                    downloadProbabilities(radarPaths.dirs.first(), radarPaths.files.first())
                 val storm = downloadStorm(stormPaths.filesFront.first())
                 val map = downloadMap()
 
                 val outImage = mergeImages(rain, probabilities, storm, map)
                 continuation.resume(outImage)
-            } catch (e: Exception) {
+            } catch (e: IOException) {
                 e.printStackTrace()
             }
         }
@@ -77,12 +81,17 @@ class AntistormDataSource(
             canvas.drawBitmap(mapImage, null, destRect, null)
         }
 
-        positionMarker.draw(777F, 459F, stormImage)
+        drawMarker(stormImage)
 
         canvas.drawBitmap(probabilitiesImage, null, destRect, alphaPaint)
         canvas.drawBitmap(rainImage, null, destRect, null)
         canvas.drawBitmap(stormImage, null, destRect, null)
         return outImage
+    }
+
+    @Suppress("MagicNumber")
+    private fun drawMarker(stormImage: Bitmap) {
+        positionMarker.draw(777F, 459F, stormImage)
     }
 
     private fun downloadRain(fileFront: String): Bitmap {
@@ -94,7 +103,7 @@ class AntistormDataSource(
         val url = PROBABILITIES_URL.replace("{dir}", dir).replace("{file}", file)
         return httpTools.downloadImage(url)
     }
-    
+
     private fun downloadStorm(fileFront: String): Bitmap {
         val url = STORM_URL.replace("{fileFront}", fileFront)
         return httpTools.downloadImage(url)
@@ -104,7 +113,7 @@ class AntistormDataSource(
         if (!DRAW_MAP) return null
         return httpTools.downloadImage(MAP_URL)
     }
-    
+
     private fun parsePaths(paths: String): Paths {
         val lines = paths.split("<br>")
         val dirs = extractItems(lines, DIRS_NAME)
@@ -123,5 +132,5 @@ class AntistormDataSource(
         return httpTools.downloadString(url)
     }
 
-    private val alphaPaint by lazy { Paint().apply { alpha = 60 } }
+    private val alphaPaint by lazy { Paint().apply { alpha = PROBABILITY_ALPHA } }
 }

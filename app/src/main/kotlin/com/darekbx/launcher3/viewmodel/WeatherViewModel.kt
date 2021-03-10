@@ -43,7 +43,7 @@ class WeatherViewModel(
         }
     }
 
-    private fun weatherDataSource(useAntiStorm: Boolean) : WeatherDataSource {
+    private fun weatherDataSource(useAntiStorm: Boolean): WeatherDataSource {
         return when (useAntiStorm) {
             true -> antistormDataSource
             else -> rainviewerDataSource

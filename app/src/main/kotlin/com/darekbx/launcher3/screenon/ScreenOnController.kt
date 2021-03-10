@@ -1,6 +1,5 @@
 package com.darekbx.launcher3.screenon
 
-import android.util.Log
 import androidx.datastore.core.DataStore
 import androidx.datastore.preferences.core.Preferences
 import androidx.datastore.preferences.core.edit
@@ -8,7 +7,7 @@ import androidx.datastore.preferences.core.intPreferencesKey
 import androidx.datastore.preferences.core.longPreferencesKey
 import kotlinx.coroutines.flow.*
 import timber.log.Timber
-import java.util.*
+import java.util.Calendar
 
 open class ScreenOnController(
     private val dataStore: DataStore<Preferences>,
@@ -22,9 +21,9 @@ open class ScreenOnController(
 
     class ScreenOnPreferences(val dailyTime: Long, val dayOfYear: Int)
 
-    private val MAGIC_ZERO by lazy { 0L }
-    private val DAILY_TIME_KEY by lazy { longPreferencesKey("dailyTimeKey") }
-    private val DAY_OF_YEAR_KEY by lazy { intPreferencesKey("dayOfYearKey") }
+    private val magicZero = 0L
+    private val dailyTimeKey = longPreferencesKey("dailyTimeKey")
+    private val dayOfYearKey = intPreferencesKey("dayOfYearKey")
     private var startTimestamp: Long = 0L
 
     fun currentDailyTime() = screenOnPreferences
@@ -37,8 +36,8 @@ open class ScreenOnController(
         }
         val timeSpent = currentTime() - startTimestamp
         val preferences = screenOnPreferences.first()
-        var dailyTime = when {
-            preferences.dayOfYear == currentDayOfYear() ->  preferences.dailyTime
+        val dailyTime = when {
+            preferences.dayOfYear == currentDayOfYear() -> preferences.dailyTime
             else -> 0L
         }
         saveDailyTime(dailyTime + timeSpent)
@@ -53,20 +52,20 @@ open class ScreenOnController(
     val screenOnPreferences: Flow<ScreenOnPreferences> = dataStore.data
         .map { preferences ->
             ScreenOnPreferences(
-                preferences[DAILY_TIME_KEY] ?: MAGIC_ZERO,
-                preferences[DAY_OF_YEAR_KEY] ?: MAGIC_ZERO.toInt()
+                preferences[dailyTimeKey] ?: magicZero,
+                preferences[dayOfYearKey] ?: magicZero.toInt()
             )
         }
 
     open suspend fun saveDailyTime(value: Long) {
         dataStore.edit { settings ->
-            settings[DAILY_TIME_KEY] = value
+            settings[dailyTimeKey] = value
         }
     }
 
     open suspend fun saveDayOfYear(value: Int) {
         dataStore.edit { settings ->
-            settings[DAY_OF_YEAR_KEY] = value
+            settings[dayOfYearKey] = value
         }
     }
 }

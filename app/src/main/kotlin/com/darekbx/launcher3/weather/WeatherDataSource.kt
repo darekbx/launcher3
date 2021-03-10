@@ -4,5 +4,5 @@ import android.graphics.Bitmap
 
 interface WeatherDataSource {
 
-    suspend fun downloadRainPrediction(lat:Double, lng: Double): Bitmap
+    suspend fun downloadRainPrediction(lat: Double, lng: Double): Bitmap
 }

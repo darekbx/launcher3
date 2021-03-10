@@ -18,7 +18,6 @@ class PositionMarker {
 
     private val markerPaint by lazy {
         Paint().apply {
-            //style = Paint.Style.FILL
             isAntiAlias = true
             color = Color.RED
         }

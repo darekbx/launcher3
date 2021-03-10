@@ -4,10 +4,10 @@ import android.os.Bundle
 import androidx.appcompat.app.AppCompatActivity
 import com.darekbx.launcher3.R
 
-class SettingsActivity: AppCompatActivity(R.layout.activity_settings) {
+class SettingsActivity : AppCompatActivity(R.layout.activity_settings) {
 
     companion object {
-        val PREFERENCES_WERE_CHANGED = 100
+        const val PREFERENCES_WERE_CHANGED = 100
     }
 
     override fun onCreate(savedInstanceState: Bundle?) {

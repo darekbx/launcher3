@@ -2,9 +2,13 @@ package com.darekbx.launcher3.weather
 
 import android.graphics.Bitmap
 import com.darekbx.launcher3.utils.HttpTools
-import com.nhaarman.mockitokotlin2.*
+import com.nhaarman.mockitokotlin2.any
+import com.nhaarman.mockitokotlin2.argumentCaptor
+import com.nhaarman.mockitokotlin2.mock
+import com.nhaarman.mockitokotlin2.doReturn
+import com.nhaarman.mockitokotlin2.times
+import com.nhaarman.mockitokotlin2.verify
 import kotlinx.coroutines.runBlocking
-import kotlinx.coroutines.test.runBlockingTest
 import org.junit.Assert.assertEquals
 import org.junit.Assert.assertTrue
 import org.junit.Test
@@ -39,7 +43,8 @@ class AntistormDataSourceTest {
     @Test
     fun `Image was properly generated`() = runBlocking {
         // Given
-        val antistormDataSource = AntistormDataSource(httpTools)
+        val positionMarker = mock<PositionMarker>()
+        val antistormDataSource = AntistormDataSource(httpTools, positionMarker)
 
         // When
         val result = antistormDataSource.downloadRainPrediction(0.0, 0.0)

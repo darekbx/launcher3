@@ -1,6 +1,6 @@
 package com.darekbx.launcher3.weather
 
-import android.graphics.*
+import android.graphics.Bitmap
 import com.darekbx.launcher3.utils.HttpTools
 import com.darekbx.launcher3.weather.model.WeatherMap
 import java.lang.IllegalStateException
@@ -11,7 +11,7 @@ import kotlin.coroutines.suspendCoroutine
 class RainviewerDataSource(
     private val httpTools: HttpTools,
     private val positionMarker: PositionMarker
-): WeatherDataSource {
+) : WeatherDataSource {
 
     private val weatherMapsUrl by lazy { "https://api.rainviewer.com/public/weather-maps.json" }
 
@@ -39,7 +39,6 @@ class RainviewerDataSource(
                 }
             }
         }
-
 
     private fun downloadWeatherInfo(): WeatherMap {
         return httpTools.downloadObject(weatherMapsUrl)

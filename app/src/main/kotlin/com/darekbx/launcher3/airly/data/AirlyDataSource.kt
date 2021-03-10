@@ -35,7 +35,7 @@ class AirlyDataSource(
         private const val X_RATELIMIT_REMAINING_MINUTE = "x-ratelimit-remaining-minute"
     }
 
-    class AirlyHttpTools(val apiKey: String): HttpTools() {
+    class AirlyHttpTools(val apiKey: String) : HttpTools() {
         override fun buildGetRequest(httpUrl: HttpUrl): Request {
             return super.buildGetRequest(httpUrl)
                 .newBuilder()

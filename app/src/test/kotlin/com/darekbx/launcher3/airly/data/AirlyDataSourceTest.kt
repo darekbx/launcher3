@@ -2,7 +2,6 @@ package com.darekbx.launcher3.airly.data
 
 import com.darekbx.launcher3.airly.domain.Measurements
 import com.darekbx.launcher3.airly.domain.ResponseWrapper
-import com.darekbx.launcher3.utils.HttpTools
 import kotlinx.coroutines.ExperimentalCoroutinesApi
 import kotlinx.coroutines.runBlocking
 import okhttp3.mockwebserver.MockResponse
@@ -17,7 +16,7 @@ import org.junit.Test
 @ExperimentalCoroutinesApi
 class AirlyDataSourceTest {
 
-    private val httpTools = HttpTools()
+    private val httpTools = AirlyDataSource.AirlyHttpTools("api-key")
 
     @Test
     fun `Download two installations`() = runBlocking {
@@ -27,8 +26,7 @@ class AirlyDataSourceTest {
             mockServer.enqueue(MockResponse().setBody(Buffer().readFrom(it)))
         } ?: fail("Unable to read instsallation.json file")
 
-        val apiKey = "api-key"
-        val airlyDataSource = AirlyDataSource(httpTools, apiKey, mockServer.url(""))
+        val airlyDataSource = AirlyDataSource(httpTools, mockServer.url(""))
 
         // When
         val installations = airlyDataSource.readInstallations(10.0, 20.0, 1.0, 1)
@@ -71,8 +69,7 @@ class AirlyDataSourceTest {
         } ?: fail("Unable to read measurements.json file")
         mockServer.enqueue(MockResponse().setResponseCode(500))
 
-        val apiKey = "api-key"
-        val airlyDataSource = AirlyDataSource(httpTools, apiKey, mockServer.url(""))
+        val airlyDataSource = AirlyDataSource(httpTools, mockServer.url(""))
         val measurements = mutableListOf<ResponseWrapper<Measurements>>()
 
         // When
@@ -91,7 +88,7 @@ class AirlyDataSourceTest {
                 assertEquals(1, indexes.size)
             }
 
-            with(rateLimits) {
+            rateLimits?.run {
                 assertEquals(1000, dayLimit)
                 assertEquals(900, dayRemaining)
                 assertEquals(50, minuteLimit)

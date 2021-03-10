@@ -5,7 +5,11 @@ import android.content.Context
 import androidx.datastore.core.DataStore
 import androidx.datastore.preferences.core.Preferences
 import androidx.datastore.preferences.preferencesDataStore
-import com.darekbx.launcher3.airly.data.*
+import com.darekbx.launcher3.airly.data.AirlyDataSource
+import com.darekbx.launcher3.airly.data.InstallationDataSource
+import com.darekbx.launcher3.airly.data.InstallationRepository
+import com.darekbx.launcher3.airly.data.MeasurementsDataSource
+import com.darekbx.launcher3.airly.data.MeasurementsRepository
 import com.darekbx.launcher3.location.LocationProvider
 import com.darekbx.launcher3.screenon.ScreenOnController
 import com.darekbx.launcher3.utils.HttpTools
@@ -16,7 +20,6 @@ import com.darekbx.launcher3.viewmodel.SunriseSunsetViewModel
 import com.darekbx.launcher3.weather.AntistormDataSource
 import com.darekbx.launcher3.weather.PositionMarker
 import com.darekbx.launcher3.weather.RainviewerDataSource
-import com.darekbx.launcher3.weather.WeatherDataSource
 import com.google.android.gms.location.FusedLocationProviderClient
 import org.koin.android.ext.koin.androidContext
 import org.koin.android.ext.koin.androidLogger

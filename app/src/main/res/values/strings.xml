@@ -3,10 +3,10 @@
 
     <string name="location_permission_denied">Location permissions are denied, airly information will not be show.</string>
     <string name="location_permission_rationale">Please allow location permissions.</string>
-    <string name="airly_limits_format">Limits: %d/%d, %d/%d</string>
-    <string name="screen_on_format">Screen on: %s</string>
-    <string name="sunrise_format">Sunrise: %s</string>
-    <string name="sunset_format">Sunset: %s</string>
+    <string name="airly_limits_format" formatted="false">Limits: %d/%d, %d/%d</string>
+    <string name="screen_on_format" formatted="false">Screen on: %s</string>
+    <string name="sunrise_format" formatted="false">Sunrise: %s</string>
+    <string name="sunset_format" formatted="false">Sunset: %s</string>
     <string name="use_antistorm">Antistorm</string>
     <string name="use_rainviewer">RainViewer</string>
 

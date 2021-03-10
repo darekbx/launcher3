@@ -14,6 +14,7 @@
         android:roundIcon="@mipmap/ic_launcher_round"
         android:supportsRtl="true"
         android:theme="@style/Theme.Launcher3">
+
         <activity
             android:name=".ui.MainActivity"
             android:screenOrientation="portrait">
@@ -25,6 +26,15 @@
         <activity
             android:name=".ui.settings.SettingsActivity"
             android:screenOrientation="portrait" />
+
+        <receiver android:name=".DotsReceiver"
+            android:enabled="true"
+            android:exported="true">
+            <intent-filter>
+                <action android:name="com.dotpad2.Refresh" />
+            </intent-filter>
+        </receiver>
+
     </application>
 
 </manifest>

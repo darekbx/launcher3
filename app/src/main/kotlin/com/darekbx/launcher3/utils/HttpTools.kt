@@ -25,7 +25,7 @@ open class HttpTools {
             ?: throw IOException("Response is empty")
     }
 
-    inline fun <reified T: Any> downloadObject(url: String, type: Type): T {
+    inline fun <reified T : Any> downloadObject(url: String, type: Type): T {
         val httpClient = provideOkHttpClient()
         val request = buildGetRequest(url.toHttpUrl())
         val response = httpClient.newCall(request).execute()
@@ -37,7 +37,7 @@ open class HttpTools {
         return gson.fromJson<T>(responseString, type)
     }
 
-    inline fun <reified T: Any> downloadObject(url: String): T {
+    inline fun <reified T : Any> downloadObject(url: String): T {
         val httpClient = provideOkHttpClient()
         val request = buildGetRequest(url.toHttpUrl())
         val response = httpClient.newCall(request).execute()

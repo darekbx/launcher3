@@ -8,7 +8,7 @@ import com.darekbx.launcher3.R
 class SettingsFragment : PreferenceFragmentCompat(),
     SharedPreferences.OnSharedPreferenceChangeListener {
 
-    var onPreferenceChangedListener : (() -> Unit) = { }
+    var onPreferenceChangedListener: (() -> Unit) = { }
 
     override fun onCreatePreferences(savedInstanceState: Bundle?, rootKey: String?) {
         setPreferencesFromResource(R.xml.preferences, rootKey)
