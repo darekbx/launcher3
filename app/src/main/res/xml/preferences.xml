@@ -10,7 +10,7 @@
             android:summary="@string/preferences_use_antistorm_summary"
             />
         <com.darekbx.launcher3.ui.settings.IntEditTextPreference
-            android:key="rainview_zoom"
+            android:key="rainviewer_zoom"
             android:title="@string/preferences_rainview_zoom"
             android:summary="@string/preferences_rainview_zoom_summary"
             />

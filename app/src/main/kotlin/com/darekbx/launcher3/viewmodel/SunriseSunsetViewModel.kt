@@ -1,11 +1,11 @@
 package com.darekbx.launcher3.viewmodel
 
-import androidx.lifecycle.LiveData
-import androidx.lifecycle.ViewModel
-import androidx.lifecycle.liveData
+import androidx.lifecycle.*
 import ca.rmen.sunrisesunset.SunriseSunset
 import com.darekbx.launcher3.location.LocationProvider
 import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.launch
+import kotlinx.coroutines.withContext
 import java.util.Calendar
 
 class SunriseSunsetViewModel(
@@ -15,13 +15,19 @@ class SunriseSunsetViewModel(
 
     class SunriseSunsetData(val sunrise: String, val sunset: String)
 
-    val sunriseSunset: LiveData<SunriseSunsetData> = liveData(Dispatchers.IO) {
-        val calendars = loadSunriseSunset() ?: return@liveData
-        val sunriseSunset = SunriseSunsetData(
-            sunrise = calendars[0].toFormattedTime(),
-            sunset = calendars[1].toFormattedTime()
-        )
-        emit(sunriseSunset)
+    fun sunriseSunset(): LiveData<SunriseSunsetData> {
+        val sunriseSunsetData = MutableLiveData<SunriseSunsetData>()
+        viewModelScope.launch {
+            withContext(Dispatchers.IO) {
+                val calendars = loadSunriseSunset() ?: return@withContext
+                val sunriseSunset = SunriseSunsetData(
+                    sunrise = calendars[0].toFormattedTime(),
+                    sunset = calendars[1].toFormattedTime()
+                )
+                sunriseSunsetData.postValue(sunriseSunset)
+            }
+        }
+        return sunriseSunsetData
     }
 
     private suspend fun loadSunriseSunset(): Array<out Calendar>? {

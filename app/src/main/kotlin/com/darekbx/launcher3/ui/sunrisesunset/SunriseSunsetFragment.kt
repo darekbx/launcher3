@@ -28,7 +28,7 @@ class SunriseSunsetFragment : Fragment() {
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
-        sunriseSunsetViewModel.sunriseSunset.observe(viewLifecycleOwner, {
+        sunriseSunsetViewModel.sunriseSunset().observe(viewLifecycleOwner, {
             displaySunriseSunset(it.sunrise, it.sunset)
         })
     }

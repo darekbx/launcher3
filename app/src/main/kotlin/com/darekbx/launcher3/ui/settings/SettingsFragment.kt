@@ -26,8 +26,8 @@ class SettingsFragment : PreferenceFragmentCompat(),
             if (!preferences.contains("airly_max_distance")) {
                 putFloat("airly_max_distance", BuildConfig.AIRLY_MAX_DISTANCE.toFloat())
             }
-            if (!preferences.contains("rainview_zoom")) {
-                putInt("rainview_zoom", RainviewerDataSource.DEFAULT_ZOOM)
+            if (!preferences.contains("rainviewer_zoom")) {
+                putInt("rainviewer_zoom", RainviewerDataSource.DEFAULT_ZOOM)
             }
             apply()
         }

@@ -14,6 +14,7 @@ import com.darekbx.launcher3.airly.data.MeasurementsRepository
 import com.darekbx.launcher3.location.LocationProvider
 import com.darekbx.launcher3.screenon.ScreenOnController
 import com.darekbx.launcher3.utils.HttpTools
+import com.darekbx.launcher3.utils.ScreenUtils
 import com.darekbx.launcher3.viewmodel.*
 import com.darekbx.launcher3.weather.AntistormDataSource
 import com.darekbx.launcher3.weather.PositionMarker
@@ -44,11 +45,12 @@ class LauncherApplication : Application() {
         single { FusedLocationProviderClient(get() as Context) }
         single { (get() as Context).packageManager }
         single { PreferenceManager.getDefaultSharedPreferences(get()) }
+        single { ScreenUtils() }
     }
 
     val weatherModule = module {
         single { PositionMarker() }
-        single { RainviewerDataSource(get(), get(), get()) }
+        single { RainviewerDataSource(get(), get(), get(), get()) }
         single { AntistormDataSource(get(), get()) }
     }
 

@@ -3,6 +3,7 @@ package com.darekbx.launcher3.weather
 import android.content.SharedPreferences
 import android.graphics.Bitmap
 import com.darekbx.launcher3.utils.HttpTools
+import com.darekbx.launcher3.utils.ScreenUtils
 import com.darekbx.launcher3.weather.model.WeatherMap
 import java.lang.IllegalStateException
 import kotlin.coroutines.resume
@@ -12,7 +13,8 @@ import kotlin.coroutines.suspendCoroutine
 class RainviewerDataSource(
     private val httpTools: HttpTools,
     private val positionMarker: PositionMarker,
-    private val sharedPreferences: SharedPreferences
+    private val sharedPreferences: SharedPreferences,
+    private val screenUtils: ScreenUtils
 ) : WeatherDataSource {
 
     private val weatherMapsUrl by lazy { "https://api.rainviewer.com/public/weather-maps.json" }
@@ -41,7 +43,10 @@ class RainviewerDataSource(
                         weatherTile.height / 2F,
                         weatherTile
                     )
-                    continuation.resume(weatherTile)
+
+                    val screenWidth = screenUtils.screenWidth
+                    val resizedTile = Bitmap.createScaledBitmap(weatherTile, screenWidth, screenWidth, false)
+                    continuation.resume(resizedTile)
                 }
             }
         }
@@ -61,5 +66,5 @@ class RainviewerDataSource(
     }
 
     private val zoom: Int
-        get() = sharedPreferences.getInt("rainview_zoom", DEFAULT_ZOOM)
+        get() = sharedPreferences.getInt("rainviewer_zoom", DEFAULT_ZOOM)
 }

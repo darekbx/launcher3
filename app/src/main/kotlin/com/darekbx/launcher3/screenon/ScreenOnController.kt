@@ -31,7 +31,7 @@ open class ScreenOnController(
     suspend fun notifyScreenOff() {
         Timber.d("notifyScreenOff")
         if (startTimestamp == 0L) {
-            // Session initializec when screen was turned on
+            // Session initialize when screen was turned on
             return
         }
         val timeSpent = currentTime() - startTimestamp
