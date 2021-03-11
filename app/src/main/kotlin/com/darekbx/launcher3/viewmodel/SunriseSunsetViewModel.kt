@@ -9,7 +9,8 @@ import kotlinx.coroutines.Dispatchers
 import java.util.Calendar
 
 class SunriseSunsetViewModel(
-    private val locationProvider: LocationProvider
+    private val locationProvider: LocationProvider,
+    private val calendar: Calendar = Calendar.getInstance()
 ) : ViewModel() {
 
     class SunriseSunsetData(val sunrise: String, val sunset: String)
@@ -27,7 +28,7 @@ class SunriseSunsetViewModel(
         val currentLocation = locationProvider.currentLocation()
         if (currentLocation != null) {
             return SunriseSunset.getSunriseSunset(
-                Calendar.getInstance(),
+                calendar,
                 currentLocation.latitude, currentLocation.longitude
             )
         }

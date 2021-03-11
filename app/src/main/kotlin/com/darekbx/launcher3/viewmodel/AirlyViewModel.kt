@@ -1,5 +1,6 @@
 package com.darekbx.launcher3.viewmodel
 
+import android.content.SharedPreferences
 import android.location.Location
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.MutableLiveData
@@ -22,7 +23,8 @@ import timber.log.Timber
 class AirlyViewModel(
     private val installationRepository: InstallationRepository,
     private val measurementsRepository: MeasurementsRepository,
-    private val locationProvider: LocationProvider
+    private val locationProvider: LocationProvider,
+    private val sharedPreferences: SharedPreferences
 ) : ViewModel() {
 
     companion object {
@@ -33,7 +35,7 @@ class AirlyViewModel(
 
     val installations = MutableLiveData<List<Installation>>()
     val measurements = MutableLiveData<Measurements>()
-    val distanceMeasurements = Transformations.map(measurements, { measurement ->
+    val distanceMeasurements = Transformations.map(measurements) { measurement ->
         val measurementInstallation =
             installations.value?.find { it.id == measurement.installationId }
         var distanceToLocation = ""
@@ -42,7 +44,7 @@ class AirlyViewModel(
             distanceToLocation = (distance / oneKilometer).format(1)
         }
         DistanceMeasurements(measurement, distanceToLocation)
-    })
+    }
 
     fun loadInstallations() {
         viewModelScope.launch {
@@ -52,7 +54,7 @@ class AirlyViewModel(
                     currentLocation = location
                     val installationsWrapper = installationRepository.readInstallations(
                         currentLocation.latitude, currentLocation.longitude,
-                        BuildConfig.AIRLY_MAX_DISTANCE, BuildConfig.AIRLY_MAX_RESULTS
+                        maxDistance, maxResults
                     )
                     when {
                         installationsWrapper.value == null || installationsWrapper.hasError -> {
@@ -79,6 +81,15 @@ class AirlyViewModel(
             }
         }
     }
+
+    private val maxResults: Int
+        get() = sharedPreferences.getInt("airly_max_results", BuildConfig.AIRLY_MAX_RESULTS)
+
+    private val maxDistance: Double
+        get() = sharedPreferences.getFloat(
+            "airly_max_distance",
+            BuildConfig.AIRLY_MAX_DISTANCE.toFloat()
+        ).toDouble()
 
     private fun distanceToInstallation(coordinates: Coordinates): Double {
         val results = FloatArray(1)

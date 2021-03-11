@@ -9,10 +9,24 @@
             android:title="@string/preferences_use_antistorm"
             android:summary="@string/preferences_use_antistorm_summary"
             />
-        <EditTextPreference
+        <com.darekbx.launcher3.ui.settings.IntEditTextPreference
             android:key="rainview_zoom"
             android:title="@string/preferences_rainview_zoom"
             android:summary="@string/preferences_rainview_zoom_summary"
+            />
+    </PreferenceCategory>
+
+    <PreferenceCategory
+        android:title="@string/preferences_airly">
+        <com.darekbx.launcher3.ui.settings.IntEditTextPreference
+            android:key="airly_max_results"
+            android:title="@string/preferences_airly_max_results"
+            android:summary="@string/preferences_airly_max_results_summary"
+            />
+        <com.darekbx.launcher3.ui.settings.FloatEditTextPreference
+            android:key="airly_max_distance"
+            android:title="@string/preferences_airly_max_distance"
+            android:summary="@string/preferences_airly_max_distance_summary"
             />
     </PreferenceCategory>
 

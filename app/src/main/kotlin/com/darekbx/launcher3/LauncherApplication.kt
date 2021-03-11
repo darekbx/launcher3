@@ -48,7 +48,7 @@ class LauncherApplication : Application() {
 
     val weatherModule = module {
         single { PositionMarker() }
-        single { RainviewerDataSource(get(), get()) }
+        single { RainviewerDataSource(get(), get(), get()) }
         single { AntistormDataSource(get(), get()) }
     }
 
@@ -61,7 +61,7 @@ class LauncherApplication : Application() {
     }
 
     val viewModelModule = module {
-        viewModel { AirlyViewModel(get(), get(), get()) }
+        viewModel { AirlyViewModel(get(), get(), get(), get()) }
         viewModel { SunriseSunsetViewModel(get()) }
         viewModel { ScreenOnViewModel(get()) }
         viewModel { WeatherViewModel(get(), get(), get()) }

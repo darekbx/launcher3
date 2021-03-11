@@ -3,15 +3,17 @@ package com.darekbx.launcher3.ui
 import android.content.Intent
 import android.content.IntentFilter
 import android.os.Bundle
-import android.view.Gravity
 import android.view.View
 import androidx.appcompat.app.AppCompatActivity
+import androidx.core.view.GravityCompat
 import androidx.drawerlayout.widget.DrawerLayout
 import com.darekbx.launcher3.R
 import com.darekbx.launcher3.databinding.ActivityDrawerBinding
 import com.darekbx.launcher3.screenon.ScreenOnReceiver
 import com.darekbx.launcher3.ui.applications.ApplicationsFragment
+import org.koin.core.component.KoinApiExtension
 
+@KoinApiExtension
 class DrawerActivity : AppCompatActivity(), DrawerLayout.DrawerListener {
 
     private val screenOnReceiver by lazy { ScreenOnReceiver() }
@@ -31,7 +33,7 @@ class DrawerActivity : AppCompatActivity(), DrawerLayout.DrawerListener {
             supportFragmentManager
                 .beginTransaction()
                 .add(R.id.content_frame, MainFragment())
-                .add(R.id.right_drawer, ApplicationsFragment())
+                .add(R.id.right_drawer, provideApplicationsFragment())
                 .commit()
         }
 
@@ -49,16 +51,24 @@ class DrawerActivity : AppCompatActivity(), DrawerLayout.DrawerListener {
     }
 
     override fun onBackPressed() {
-        if (binding.drawerLayout.isDrawerOpen(Gravity.RIGHT)) {
+        if (binding.drawerLayout.isDrawerOpen(GravityCompat.END)) {
             binding.drawerLayout.closeDrawers()
         }
     }
 
-    override fun onDrawerSlide(drawerView: View, slideOffset: Float) { }
+    override fun onDrawerSlide(drawerView: View, slideOffset: Float) {}
 
-    override fun onDrawerOpened(drawerView: View) { }
+    override fun onDrawerOpened(drawerView: View) {}
 
-    override fun onDrawerClosed(drawerView: View) { }
+    override fun onDrawerClosed(drawerView: View) {}
 
-    override fun onDrawerStateChanged(newState: Int) { }
+    override fun onDrawerStateChanged(newState: Int) {}
+
+    private fun provideApplicationsFragment(): ApplicationsFragment {
+        return ApplicationsFragment().apply {
+            onRedirect = {
+                binding.drawerLayout.closeDrawers()
+            }
+        }
+    }
 }

@@ -38,6 +38,8 @@ class ApplicationsFragment : Fragment() {
     private var _binding: FragmentApplicationsBinding? = null
     private val binding get() = _binding!!
 
+    var onRedirect: () -> Unit = { }
+
     override fun onCreateView(
         inflater: LayoutInflater,
         container: ViewGroup?,
@@ -95,6 +97,10 @@ class ApplicationsFragment : Fragment() {
         })
     }
 
+    private fun notifyRedirect() {
+        onRedirect()
+    }
+
     private val itemTouchFlags by lazy {
         ItemTouchHelper.UP or ItemTouchHelper.DOWN or ItemTouchHelper.LEFT or ItemTouchHelper.RIGHT
     }
@@ -120,8 +126,14 @@ class ApplicationsFragment : Fragment() {
 
     private val applicationAdapter by lazy {
         ApplicationAdapter().apply {
-            onItemClick = { startActivityByPackageName(it) }
-            onItemLongClick = { applicationSettings(it) }
+            onItemClick = {
+                notifyRedirect()
+                startActivityByPackageName(it)
+            }
+            onItemLongClick = {
+                notifyRedirect()
+                applicationSettings(it)
+            }
         }
     }
 }
