@@ -39,6 +39,11 @@ class ScreenOnFragment : Fragment() {
         })
     }
 
+    override fun onResume() {
+        super.onResume()
+        screenOnViewModel.loadScreenOn()
+    }
+
     private fun displayScreenOn(secondsOn: Long?) {
         val second = TimeUnit.MINUTES.toSeconds(1)
         val hour = TimeUnit.HOURS.toSeconds(1)
