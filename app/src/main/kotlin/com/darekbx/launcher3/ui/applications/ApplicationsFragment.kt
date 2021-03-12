@@ -66,9 +66,10 @@ class ApplicationsFragment : Fragment() {
         val itemTouchHelper = ItemTouchHelper(itemTouchCallback)
         itemTouchHelper.attachToRecyclerView(binding.applicationsList)
 
-        applicationsViewModel.listApplications().observe(viewLifecycleOwner, { applications ->
+        applicationsViewModel.applications.observe(viewLifecycleOwner, { applications ->
             applicationAdapter.applications = applications.toMutableList()
         })
+        applicationsViewModel.listApplications()
     }
 
     private fun startActivityByPackageName(application: Application?) {

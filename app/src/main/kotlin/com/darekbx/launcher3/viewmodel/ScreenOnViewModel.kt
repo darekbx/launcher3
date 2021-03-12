@@ -5,7 +5,6 @@ import androidx.lifecycle.ViewModel
 import androidx.lifecycle.liveData
 import com.darekbx.launcher3.screenon.ScreenOnController
 import kotlinx.coroutines.Dispatchers
-import kotlinx.coroutines.flow.collect
 import java.util.concurrent.TimeUnit
 
 class ScreenOnViewModel(
@@ -13,9 +12,7 @@ class ScreenOnViewModel(
 ) : ViewModel() {
 
     val screenOn: LiveData<Long> = liveData(Dispatchers.IO) {
-        screenOnController.currentDailyTime().collect { screenOnPreferences ->
-            val seconds = screenOnPreferences.dailyTime / TimeUnit.SECONDS.toMillis(1)
-            emit(seconds)
-        }
+        val dailyTime = screenOnController.currentDailyTime() / TimeUnit.SECONDS.toMillis(1)
+        emit(dailyTime)
     }
 }

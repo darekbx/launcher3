@@ -22,27 +22,27 @@ class ApplicationsViewModel(
         private const val APP_PREFERENCE_PREFIX = "application_"
     }
 
-    fun listApplications(): MutableLiveData<List<Application>> {
-        val data = MutableLiveData<List<Application>>()
+    val applications = MutableLiveData<List<Application>>()
+
+    fun listApplications() {
         viewModelScope.launch {
             withContext(Dispatchers.IO) {
                 try {
                     val launcherIntent = provideLauncherIntent()
                     val activities = packageManager.queryIntentActivities(launcherIntent, 0)
-                    val applications = activities.map { resolveInfo ->
+                    val applicationsList = activities.map { resolveInfo ->
                         val label = loadLabel(resolveInfo)
                         val packageName = loadPackageName(resolveInfo)
                         val icon = loadAppIcon(packageName)
                         val position = readPosition(packageName)
                         Application(label, packageName, icon, position)
                     }
-                    data.postValue(applications.sortedBy { it.position })
+                    applications.postValue(applicationsList.sortedBy { it.position })
                 } catch (e: Exception) {
                     e.printStackTrace()
                 }
             }
         }
-        return data
     }
 
     fun provideLauncherIntent(): Intent {

@@ -1,67 +1,52 @@
 package com.darekbx.launcher3.screenon
 
-import androidx.datastore.core.DataStore
-import androidx.datastore.preferences.core.Preferences
-import androidx.datastore.preferences.core.longPreferencesKey
-import androidx.datastore.preferences.core.intPreferencesKey
-import com.nhaarman.mockitokotlin2.mock
-import com.nhaarman.mockitokotlin2.doReturn
-import com.nhaarman.mockitokotlin2.spy
-import com.nhaarman.mockitokotlin2.verify
-import com.nhaarman.mockitokotlin2.times
-import com.nhaarman.mockitokotlin2.argumentCaptor
-import com.nhaarman.mockitokotlin2.eq
-import kotlinx.coroutines.flow.collect
-import kotlinx.coroutines.flow.flowOf
-import kotlinx.coroutines.runBlocking
+import android.content.SharedPreferences
+import com.nhaarman.mockitokotlin2.*
+import org.junit.After
 import org.junit.Test
 import org.junit.Assert.assertEquals
+import org.junit.runner.RunWith
+import org.koin.core.context.stopKoin
+import org.robolectric.RobolectricTestRunner
 
+@RunWith(RobolectricTestRunner::class)
 class ScreenOnControllerTest {
 
     private var currentSystemTime = 0L
     private var dayOfYear = 0
 
-    private val preference: Preferences = mock {
-        on { get(longPreferencesKey("dailyTimeKey")) } doReturn 0L
-        on { get(intPreferencesKey("dayOfYearKey")) } doReturn 10
+    @After
+    fun tearDown() {
+        stopKoin()
     }
-    private val dataStore: DataStore<Preferences> = mock {
-        on { data } doReturn flowOf(preference)
-    }
-
-    private val screenOnController = spy(ScreenOnController(dataStore, { currentSystemTime }, { dayOfYear }))
 
     @Test
-    fun `User was present once`() = runBlocking {
+    fun `User was present once`() {
         // Given
         notifyUser(10, 1000L, 5000L)
 
         // When
-        screenOnController.currentDailyTime().collect { }
+        val dailyTime = screenOnController.currentDailyTime()
 
-        // ThendoReturn
-        verify(screenOnController, times(1)).saveDailyTime(eq(4000L))
-        verify(screenOnController, times(1)).saveDayOfYear(eq(10))
+        // Then
+        assertEquals(4000L, dailyTime)
     }
 
     @Test
-    fun `User was present two times`() = runBlocking {
+    fun `User was present two times`() {
         // Given
         notifyUser(10, 1000L, 5000L)
         notifyUser(10, 8000L, 9000L)
 
-        // Then
-        val dailyTimeCaptor = argumentCaptor<Long>()
-        verify(screenOnController, times(2)).saveDailyTime(dailyTimeCaptor.capture())
-        assertEquals(4000L, dailyTimeCaptor.firstValue)
-        assertEquals(1000L, dailyTimeCaptor.secondValue)
+        // When
+        val dailyTime = screenOnController.currentDailyTime()
 
-        verify(screenOnController, times(2)).saveDayOfYear(eq(10))
+        // Then
+        assertEquals(5000L, dailyTime)
     }
 
     @Test
-    fun `Day was changed and daily time was being reset`() = runBlocking {
+    fun `Day was changed and daily time was being reset`() {
         // Given
         notifyUser(10, 1000L, 5000L)
 
@@ -69,22 +54,100 @@ class ScreenOnControllerTest {
         notifyUser(11, 7000L, 9000L)
 
         // Then
-        val dailyTimeCaptor = argumentCaptor<Long>()
-        verify(screenOnController, times(2)).saveDailyTime(dailyTimeCaptor.capture())
-        assertEquals(4000L, dailyTimeCaptor.firstValue)
-        assertEquals(2000L, dailyTimeCaptor.secondValue)
+        val dailyTime = screenOnController.currentDailyTime()
 
-        val dayOfYearCaptor = argumentCaptor<Int>()
-        verify(screenOnController, times(2)).saveDayOfYear(dayOfYearCaptor.capture())
-        assertEquals(10, dayOfYearCaptor.firstValue)
-        assertEquals(11, dayOfYearCaptor.secondValue)
+        // Then
+        assertEquals(2000L, dailyTime)
     }
 
-    private suspend fun notifyUser(day: Int, userPresentTime: Long, screenOfTime: Long) {
+    private fun notifyUser(day: Int, userPresentTime: Long, screenOfTime: Long) {
         dayOfYear = day
         currentSystemTime = userPresentTime
         screenOnController.notifyUserPresent()
         currentSystemTime = screenOfTime
         screenOnController.notifyScreenOff()
     }
+
+    private val inMemorySharedPreferences = object : SharedPreferences {
+        private val data = mutableMapOf<String, Any>()
+
+        override fun getAll(): MutableMap<String, *> = data
+
+        override fun getString(key: String?, defValue: String?): String? = data[key]?.toString()
+
+        override fun getStringSet(
+            key: String?,
+            defValues: MutableSet<String>?
+        ): MutableSet<String> = emptySet<String>().toMutableSet()
+
+        override fun getInt(key: String?, defValue: Int): Int =
+            data[key]?.toString()?.toInt() ?: defValue
+
+        override fun getLong(key: String?, defValue: Long): Long =
+            data[key]?.toString()?.toLong() ?: defValue
+
+        override fun getFloat(key: String?, defValue: Float): Float =
+            data[key]?.toString()?.toFloat() ?: defValue
+
+        override fun getBoolean(key: String?, defValue: Boolean): Boolean =
+            data[key]?.toString()?.toBoolean() ?: defValue
+
+        override fun contains(key: String?): Boolean = data.containsKey(key)
+
+        override fun edit(): SharedPreferences.Editor = object : SharedPreferences.Editor {
+
+            override fun putString(key: String?, value: String?): SharedPreferences.Editor {
+                data[key ?: ""] = value ?: ""
+                return this
+            }
+
+            override fun putStringSet(
+                key: String?,
+                values: MutableSet<String>?
+            ): SharedPreferences.Editor {
+                return this
+            }
+
+            override fun putInt(key: String?, value: Int): SharedPreferences.Editor {
+                data[key ?: ""] = value
+                return this
+            }
+
+            override fun putLong(key: String?, value: Long): SharedPreferences.Editor {
+                data[key ?: ""] = value
+                return this
+            }
+
+            override fun putFloat(key: String?, value: Float): SharedPreferences.Editor {
+                data[key ?: ""] = value
+                return this
+            }
+
+            override fun putBoolean(key: String?, value: Boolean): SharedPreferences.Editor {
+                data[key ?: ""] = value
+                return this
+            }
+
+            override fun remove(key: String?): SharedPreferences.Editor {
+                return this
+            }
+
+            override fun clear(): SharedPreferences.Editor {
+                return this
+            }
+
+            override fun commit(): Boolean {
+                return true
+            }
+
+            override fun apply() {}
+        }
+
+        override fun registerOnSharedPreferenceChangeListener(listener: SharedPreferences.OnSharedPreferenceChangeListener?) {}
+
+        override fun unregisterOnSharedPreferenceChangeListener(listener: SharedPreferences.OnSharedPreferenceChangeListener?) {}
+    }
+
+    private val screenOnController =
+        spy(ScreenOnController(inMemorySharedPreferences, { currentSystemTime }, { dayOfYear }))
 }

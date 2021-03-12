@@ -51,7 +51,8 @@ class ApplicationsViewModelTest : TestCase() {
                 .queryIntentActivities(any(), any())
 
             // When
-            applicationsViewModel.listApplications().observeForever(observer)
+            applicationsViewModel.applications.observeForever(observer)
+            applicationsViewModel.listApplications()
 
             // Then
             val captor = argumentCaptor<List<Application>>()
