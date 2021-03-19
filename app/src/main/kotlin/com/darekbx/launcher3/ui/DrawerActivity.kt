@@ -33,7 +33,7 @@ class DrawerActivity : AppCompatActivity(), DrawerLayout.DrawerListener {
             supportFragmentManager
                 .beginTransaction()
                 .add(R.id.content_frame, MainFragment())
-                .add(R.id.right_drawer, provideApplicationsFragment())
+                .add(R.id.right_drawer, ApplicationsFragment())
                 .commit()
         }
 
@@ -50,6 +50,14 @@ class DrawerActivity : AppCompatActivity(), DrawerLayout.DrawerListener {
         _binding = null
     }
 
+    override fun onResume() {
+        super.onResume()
+        val applicationsFragment = supportFragmentManager.findFragmentById(R.id.right_drawer) as? ApplicationsFragment
+        applicationsFragment?.onRedirect = {
+            binding.drawerLayout.closeDrawers()
+        }
+    }
+
     override fun onBackPressed() {
         if (binding.drawerLayout.isDrawerOpen(GravityCompat.END)) {
             binding.drawerLayout.closeDrawers()
@@ -63,12 +71,4 @@ class DrawerActivity : AppCompatActivity(), DrawerLayout.DrawerListener {
     override fun onDrawerClosed(drawerView: View) {}
 
     override fun onDrawerStateChanged(newState: Int) {}
-
-    private fun provideApplicationsFragment(): ApplicationsFragment {
-        return ApplicationsFragment().apply {
-            onRedirect = {
-                binding.drawerLayout.closeDrawers()
-            }
-        }
-    }
 }

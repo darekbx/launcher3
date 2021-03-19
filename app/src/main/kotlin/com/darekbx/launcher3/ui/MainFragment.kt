@@ -23,6 +23,10 @@ import org.koin.core.component.KoinApiExtension
 @KoinApiExtension
 class MainFragment : Fragment() {
 
+    companion object {
+        private val ENABLE_SCREEN_ON = false
+    }
+
     private val resultLauncher = registerForActivityResult(
         ActivityResultContracts.StartActivityForResult()
     ) { result ->
@@ -52,14 +56,19 @@ class MainFragment : Fragment() {
 
         permissionRequester.runWithPermissions {
             if (childFragmentManager.fragments.isEmpty()) {
-                childFragmentManager
+                val transaction = childFragmentManager
                     .beginTransaction()
                     .add(R.id.airly_fragment, AirlyFragment())
                     .add(R.id.weather_fragment, WeatherFragment())
                     .add(R.id.sunrise_sunset_fragment, SunriseSunsetFragment())
-                    .add(R.id.screen_on_fragment, ScreenOnFragment())
+
                     .add(R.id.main_icons_fragment, ActionIconsFragment())
-                    .commit()
+
+                if (ENABLE_SCREEN_ON) {
+                    transaction.add(R.id.screen_on_fragment, ScreenOnFragment())
+                }
+
+                transaction.commit()
             }
         }
     }

@@ -22,22 +22,22 @@ open class ScreenOnController(
     fun currentDailyTime() = dailyTime()
 
     fun notifyScreenOff() {
-        Timber.d("notifyScreenOff")
+        Timber.d("Notify screen off")
         if (startTimestamp == 0L) {
             // Session initialize when screen was turned on
             return
         }
         val timeSpent = currentTime() - startTimestamp
         saveDailyTime(dailyTime() + timeSpent)
-        saveDayOfYear(currentDayOfYear())
     }
 
     fun notifyUserPresent() {
-        Timber.d("notifyUserPresent")
+        Timber.d("Notify user present")
         startTimestamp = currentTime()
 
         val currentDayOfYear = currentDayOfYear()
         if (dayOfYear() != currentDayOfYear) {
+            Timber.d("Current was changed")
             saveDailyTime(0L)
             saveDayOfYear(currentDayOfYear)
         }

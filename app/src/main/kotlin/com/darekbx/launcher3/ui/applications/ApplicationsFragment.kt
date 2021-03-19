@@ -99,6 +99,7 @@ class ApplicationsFragment : Fragment() {
     }
 
     private fun notifyRedirect() {
+        binding.applicationsList.scrollToPosition(0)
         onRedirect()
     }
 
@@ -132,8 +133,9 @@ class ApplicationsFragment : Fragment() {
                 startActivityByPackageName(it)
             }
             onItemLongClick = {
-                notifyRedirect()
-                applicationSettings(it)
+                // Temporary do nothing
+                //notifyRedirect()
+                //applicationSettings(it)
             }
         }
     }
