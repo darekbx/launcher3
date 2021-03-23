@@ -61,7 +61,6 @@ class MainFragment : Fragment() {
                     .add(R.id.airly_fragment, AirlyFragment())
                     .add(R.id.weather_fragment, WeatherFragment())
                     .add(R.id.sunrise_sunset_fragment, SunriseSunsetFragment())
-
                     .add(R.id.main_icons_fragment, ActionIconsFragment())
 
                 if (ENABLE_SCREEN_ON) {

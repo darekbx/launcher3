@@ -7,10 +7,11 @@ import android.view.ViewGroup
 import androidx.fragment.app.Fragment
 import com.darekbx.launcher3.R
 import com.darekbx.launcher3.databinding.FragmentSunriseSunsetBinding
+import com.darekbx.launcher3.ui.RefreshableFragment
 import com.darekbx.launcher3.viewmodel.SunriseSunsetViewModel
 import org.koin.android.viewmodel.ext.android.viewModel
 
-class SunriseSunsetFragment : Fragment() {
+class SunriseSunsetFragment : Fragment(), RefreshableFragment {
 
     private val sunriseSunsetViewModel: SunriseSunsetViewModel by viewModel()
 
@@ -28,6 +29,10 @@ class SunriseSunsetFragment : Fragment() {
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
+        loadSunriseSunset()
+    }
+
+    private fun loadSunriseSunset() {
         sunriseSunsetViewModel.sunriseSunset().observe(viewLifecycleOwner, {
             displaySunriseSunset(it.sunrise, it.sunset)
         })
@@ -36,6 +41,10 @@ class SunriseSunsetFragment : Fragment() {
     override fun onDestroyView() {
         super.onDestroyView()
         _binding = null
+    }
+
+    override fun refresh() {
+        loadSunriseSunset()
     }
 
     private fun displaySunriseSunset(sunrise: String, sunset: String) {
