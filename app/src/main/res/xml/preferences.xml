@@ -30,4 +30,13 @@
             />
     </PreferenceCategory>
 
+    <PreferenceCategory
+        android:title="@string/preferences_other">
+        <CheckBoxPreference
+            android:key="applications_list_drag_drop"
+            android:title="@string/preferences_drag_drop"
+            android:summary="@string/preferences_drag_drop_summary"
+            />
+    </PreferenceCategory>
+
 </PreferenceScreen>

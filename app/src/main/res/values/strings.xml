@@ -12,6 +12,7 @@
 
     <string name="preferences_weather">Weather</string>
     <string name="preferences_airly">Airly</string>
+    <string name="preferences_other">Other</string>
     <string name="preferences_use_antistorm">Use Antistorm</string>
     <string name="preferences_use_antistorm_summary">Set default weather source</string>
     <string name="preferences_rainview_zoom">RainViewer zoom level</string>
@@ -20,4 +21,6 @@
     <string name="preferences_airly_max_results_summary">Set maximum installations to fetch</string>
     <string name="preferences_airly_max_distance">Max distance</string>
     <string name="preferences_airly_max_distance_summary">Set maximum distance to fetch installations</string>
+    <string name="preferences_drag_drop">Drag&amp;drop</string>
+    <string name="preferences_drag_drop_summary">Enable Drag&amp;Drop in applications list.</string>
 </resources>

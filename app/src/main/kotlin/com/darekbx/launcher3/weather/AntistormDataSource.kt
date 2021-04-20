@@ -27,7 +27,7 @@ class AntistormDataSource(
 
     companion object {
         private const val DRAW_MAP = false
-        private const val PROBABILITY_ALPHA = 60
+        private const val PROBABILITY_ALPHA = 40
 
         private const val BASE_URL = "https://antistorm.eu"
         private const val MAP_URL = "$BASE_URL/map/final-map.png"
@@ -72,6 +72,7 @@ class AntistormDataSource(
         stormImage: Bitmap,
         mapImage: Bitmap?
     ): Bitmap {
+        val alphaPaint2 = Paint().apply { alpha = 200 }
         val destRect = Rect(0, 0, rainImage.width, rainImage.height)
         val outImage =
             Bitmap.createBitmap(destRect.width(), destRect.height(), Bitmap.Config.ARGB_8888)
@@ -84,7 +85,7 @@ class AntistormDataSource(
         drawMarker(stormImage)
 
         canvas.drawBitmap(probabilitiesImage, null, destRect, alphaPaint)
-        canvas.drawBitmap(rainImage, null, destRect, null)
+        canvas.drawBitmap(rainImage, null, destRect, alphaPaint2)
         canvas.drawBitmap(stormImage, null, destRect, null)
         return outImage
     }

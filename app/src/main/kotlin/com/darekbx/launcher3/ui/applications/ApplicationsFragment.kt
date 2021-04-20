@@ -11,6 +11,7 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import androidx.fragment.app.Fragment
+import androidx.preference.PreferenceManager
 import androidx.recyclerview.widget.GridLayoutManager
 import androidx.recyclerview.widget.ItemTouchHelper
 import androidx.recyclerview.widget.RecyclerView
@@ -114,16 +115,26 @@ class ApplicationsFragment : Fragment() {
             viewHolder: RecyclerView.ViewHolder,
             target: RecyclerView.ViewHolder
         ): Boolean {
+            if (!isDragDropEnabled) return false
             val fromPosition = viewHolder.adapterPosition
             val toPosition = target.adapterPosition
             val item = applicationAdapter.applications.removeAt(fromPosition)
+            val previousItem = applicationAdapter.applications.removeAt(fromPosition)
             applicationAdapter.applications.add(toPosition, item)
             recyclerView.adapter?.notifyItemMoved(fromPosition, toPosition)
             applicationsViewModel.savePosition(item, toPosition)
+            applicationsViewModel.savePosition(previousItem, fromPosition)
             return false
         }
 
         override fun onSwiped(viewHolder: RecyclerView.ViewHolder, direction: Int) { }
+    }
+
+    private val isDragDropEnabled: Boolean
+        get() = settingsPreferences.getBoolean("applications_list_drag_drop", true)
+
+    private val settingsPreferences by lazy {
+        PreferenceManager.getDefaultSharedPreferences(requireContext())
     }
 
     private val applicationAdapter by lazy {

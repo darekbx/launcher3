@@ -10,6 +10,10 @@ import com.darekbx.launcher3.weather.RainviewerDataSource
 class SettingsFragment : PreferenceFragmentCompat(),
     SharedPreferences.OnSharedPreferenceChangeListener {
 
+    companion object {
+        private const val DEFAULT_DRAG_DROP = true
+    }
+
     var onPreferenceChangedListener: (() -> Unit) = { }
 
     override fun onCreatePreferences(savedInstanceState: Bundle?, rootKey: String?) {
@@ -28,6 +32,9 @@ class SettingsFragment : PreferenceFragmentCompat(),
             }
             if (!preferences.contains("rainviewer_zoom")) {
                 putInt("rainviewer_zoom", RainviewerDataSource.DEFAULT_ZOOM)
+            }
+            if (!preferences.contains("applications_list_drag_drop")) {
+                putBoolean("applications_list_drag_drop", DEFAULT_DRAG_DROP)
             }
             apply()
         }
