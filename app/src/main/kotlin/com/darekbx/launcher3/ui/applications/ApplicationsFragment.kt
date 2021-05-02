@@ -16,10 +16,11 @@ import androidx.recyclerview.widget.GridLayoutManager
 import androidx.recyclerview.widget.ItemTouchHelper
 import androidx.recyclerview.widget.RecyclerView
 import com.darekbx.launcher3.databinding.FragmentApplicationsBinding
+import com.darekbx.launcher3.ui.RefreshableFragment
 import com.darekbx.launcher3.viewmodel.ApplicationsViewModel
 import org.koin.android.viewmodel.ext.android.viewModel
 
-class ApplicationsFragment : Fragment() {
+class ApplicationsFragment : Fragment(), RefreshableFragment {
 
     companion object {
         private const val COLUMNS_COUNT = 4
@@ -73,6 +74,10 @@ class ApplicationsFragment : Fragment() {
         applicationsViewModel.listApplications()
     }
 
+    override fun refresh() {
+        applicationsViewModel.listApplications()
+    }
+
     private fun startActivityByPackageName(application: Application?) {
         if (application == null) return
         val intent = requireContext()
@@ -116,14 +121,18 @@ class ApplicationsFragment : Fragment() {
             target: RecyclerView.ViewHolder
         ): Boolean {
             if (!isDragDropEnabled) return false
+
             val fromPosition = viewHolder.adapterPosition
             val toPosition = target.adapterPosition
             val item = applicationAdapter.applications.removeAt(fromPosition)
-            val previousItem = applicationAdapter.applications.removeAt(fromPosition)
             applicationAdapter.applications.add(toPosition, item)
             recyclerView.adapter?.notifyItemMoved(fromPosition, toPosition)
             applicationsViewModel.savePosition(item, toPosition)
-            applicationsViewModel.savePosition(previousItem, fromPosition)
+
+            for (i in ((toPosition + 1)..(applicationAdapter.applications.size - 1))) {
+                val itemToMove = applicationAdapter.applications.get(i)
+                applicationsViewModel.savePosition(itemToMove, toPosition + i)
+            }
             return false
         }
 

@@ -7,6 +7,7 @@ import android.graphics.Rect
 import com.darekbx.launcher3.utils.HttpTools
 import java.io.IOException
 import kotlin.coroutines.resume
+import kotlin.coroutines.resumeWithException
 import kotlin.coroutines.suspendCoroutine
 
 class AntistormDataSource(
@@ -63,6 +64,7 @@ class AntistormDataSource(
                 continuation.resume(outImage)
             } catch (e: IOException) {
                 e.printStackTrace()
+                continuation.resumeWithException(e)
             }
         }
 

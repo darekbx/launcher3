@@ -9,7 +9,7 @@ apply from: "$rootDir/detekt.gradle"
 
 android {
     compileSdkVersion 30
-    buildToolsVersion "30.0.2"
+    buildToolsVersion "30.0.3"
 
     defaultConfig {
         applicationId "com.darekbx.launcher3"
@@ -19,6 +19,15 @@ android {
         versionName "1.0"
 
         testInstrumentationRunner "androidx.test.runner.AndroidJUnitRunner"
+    }
+
+    signingConfigs {
+        debug {
+            keyAlias 'androiddebugkey'
+            keyPassword 'android'
+            storePassword 'android'
+            storeFile file(rootProject.getProjectDir().absolutePath + '/cosmose_debug.keystore')
+        }
     }
 
     buildTypes {

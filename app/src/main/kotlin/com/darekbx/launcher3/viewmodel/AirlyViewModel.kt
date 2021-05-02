@@ -33,6 +33,7 @@ class AirlyViewModel(
 
     private var currentLocation: Location = Location("Unknown")
 
+    val error = MutableLiveData<Boolean>()
     val installations = MutableLiveData<List<Installation>>()
     val measurements = MutableLiveData<Measurements>()
     val distanceMeasurements = Transformations.map(measurements) { measurement ->
@@ -59,6 +60,7 @@ class AirlyViewModel(
                     when {
                         installationsWrapper.value == null || installationsWrapper.hasError -> {
                             Timber.e("Unabled to load installations")
+                            error.postValue(true)
                         }
                         else -> installations.postValue(installationsWrapper.value!!)
                     }
@@ -74,6 +76,7 @@ class AirlyViewModel(
                     when {
                         measurementsWrapper.value == null || measurementsWrapper.hasError -> {
                             Timber.e("Unabled to load measurements")
+                            error.postValue(true)
                         }
                         else -> measurements.postValue(measurementsWrapper.value!!)
                     }

@@ -6,11 +6,11 @@ import android.view.View
 import android.view.ViewGroup
 import androidx.fragment.app.Fragment
 import androidx.preference.PreferenceManager
-import com.darekbx.launcher3.R
 import com.darekbx.launcher3.databinding.FragmentWeatherBinding
 import com.darekbx.launcher3.ui.RefreshableFragment
 import com.darekbx.launcher3.viewmodel.WeatherViewModel
 import org.koin.android.viewmodel.ext.android.viewModel
+
 class WeatherFragment : Fragment(), RefreshableFragment {
 
     private val weatherViewModel: WeatherViewModel by viewModel()
@@ -32,7 +32,12 @@ class WeatherFragment : Fragment(), RefreshableFragment {
 
         weatherViewModel.rainPrediction.observe(viewLifecycleOwner) { rainPredictionImage ->
             binding.rainImage.setImageBitmap(rainPredictionImage)
+            binding.progress.visibility = View.GONE
         }
+        weatherViewModel.error.observe(viewLifecycleOwner) {
+            binding.progress.visibility = View.GONE
+        }
+        binding.progress.visibility = View.VISIBLE
         weatherViewModel.rainPrediction(useAntistorm)
     }
 
@@ -42,6 +47,7 @@ class WeatherFragment : Fragment(), RefreshableFragment {
     }
 
     override fun refresh() {
+        binding.progress.visibility = View.VISIBLE
         weatherViewModel.rainPrediction(useAntistorm)
     }
 

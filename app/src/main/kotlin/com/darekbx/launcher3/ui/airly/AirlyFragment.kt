@@ -23,7 +23,7 @@ class AirlyFragment : Fragment(), RefreshableFragment {
         inflater: LayoutInflater,
         container: ViewGroup?,
         savedInstanceState: Bundle?
-    ): View? {
+    ): View {
         _binding = FragmentAirlyBinding.inflate(inflater, container, false)
         return binding.root
     }
@@ -33,11 +33,15 @@ class AirlyFragment : Fragment(), RefreshableFragment {
 
         binding.measurementLayout.adapter = measurementsAdapter
 
-        airlyViewModel.installations.observe(viewLifecycleOwner, { installations ->
+        airlyViewModel.installations.observe(viewLifecycleOwner) { installations ->
             airlyViewModel.loadMeasurements((installations.map { it.id }))
-        })
 
-        airlyViewModel.distanceMeasurements.observe(viewLifecycleOwner, { distanceMeasurements ->
+            if (installations.isEmpty()) {
+                binding.progress.visibility = View.GONE
+            }
+        }
+
+        airlyViewModel.distanceMeasurements.observe(viewLifecycleOwner) { distanceMeasurements ->
             measurementsAdapter.add(distanceMeasurements)
             val limitsString = distanceMeasurements.measurements.rateLimits?.run {
                 getString(
@@ -47,8 +51,17 @@ class AirlyFragment : Fragment(), RefreshableFragment {
             }
             if (limitsString != null) {
                 binding.limits.setText(limitsString)
+
+                /**
+                 * Progress should be hidden after the last one of loaded measurement
+                 */
+                binding.progress.visibility = View.GONE
             }
-        })
+        }
+
+        airlyViewModel.error.observe(viewLifecycleOwner) {
+            binding.progress.visibility = View.GONE
+        }
 
         displayMeasurements()
     }
@@ -63,6 +76,7 @@ class AirlyFragment : Fragment(), RefreshableFragment {
     }
 
     private fun displayMeasurements() {
+        binding.progress.visibility = View.VISIBLE
         measurementsAdapter.clear()
         airlyViewModel.loadInstallations()
     }

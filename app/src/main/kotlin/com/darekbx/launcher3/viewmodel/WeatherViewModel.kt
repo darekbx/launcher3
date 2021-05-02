@@ -12,6 +12,7 @@ import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.withContext
 import java.io.IOException
+import java.lang.Exception
 import java.lang.IllegalStateException
 
 class WeatherViewModel(
@@ -21,6 +22,7 @@ class WeatherViewModel(
 ) : ViewModel() {
 
     val rainPrediction = MutableLiveData<Bitmap>()
+    val error = MutableLiveData<Exception>()
 
     fun rainPrediction(useAntiStorm: Boolean = false) {
         viewModelScope.launch {
@@ -37,8 +39,10 @@ class WeatherViewModel(
                 }
             } catch (e: IOException) {
                 e.printStackTrace()
+                error.postValue(e)
             } catch (e: IllegalStateException) {
                 e.printStackTrace()
+                error.postValue(e)
             }
         }
     }
