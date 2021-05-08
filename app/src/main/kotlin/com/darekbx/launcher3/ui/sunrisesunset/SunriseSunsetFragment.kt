@@ -33,6 +33,10 @@ class SunriseSunsetFragment : Fragment(), RefreshableFragment {
     }
 
     private fun loadSunriseSunset() {
+        val emptyText = "--:--"
+        binding.sunriseText.setText(emptyText)
+        binding.sunsetText.setText(emptyText)
+
         sunriseSunsetViewModel.sunriseSunset().observe(viewLifecycleOwner, {
             displaySunriseSunset(it.sunrise, it.sunset)
         })

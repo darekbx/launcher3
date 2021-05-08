@@ -19,7 +19,11 @@ class SunriseSunsetViewModel(
         val sunriseSunsetData = MutableLiveData<SunriseSunsetData>()
         viewModelScope.launch {
             withContext(Dispatchers.IO) {
-                val calendars = loadSunriseSunset() ?: return@withContext
+                val calendars = loadSunriseSunset()
+                if (calendars == null) {
+                    sunriseSunsetData.postValue(SunriseSunsetData("--:--", "--:--"))
+                    return@withContext
+                }
                 val sunriseSunset = SunriseSunsetData(
                     sunrise = calendars[0].toFormattedTime(),
                     sunset = calendars[1].toFormattedTime()

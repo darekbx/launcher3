@@ -1,5 +1,6 @@
 package com.darekbx.launcher3.ui.applications
 
+import android.annotation.SuppressLint
 import android.view.LayoutInflater
 import android.view.ViewGroup
 import androidx.recyclerview.widget.RecyclerView
@@ -14,6 +15,7 @@ class ApplicationAdapter :
     private var _applications = mutableListOf<Application>()
 
     var applications: MutableList<Application>
+        @SuppressLint("NotifyDataSetChanged")
         set(value) {
             _applications = value
             notifyDataSetChanged()
