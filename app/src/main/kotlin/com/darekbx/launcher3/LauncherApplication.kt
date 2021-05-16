@@ -15,6 +15,7 @@ import com.darekbx.launcher3.location.LocationProvider
 import com.darekbx.launcher3.screenon.ScreenOnController
 import com.darekbx.launcher3.utils.HttpTools
 import com.darekbx.launcher3.utils.ScreenUtils
+import com.darekbx.launcher3.utils.SunriseSunsetWrapper
 import com.darekbx.launcher3.viewmodel.*
 import com.darekbx.launcher3.weather.AntistormDataSource
 import com.darekbx.launcher3.weather.PositionMarker
@@ -46,6 +47,7 @@ class LauncherApplication : Application() {
         single { (get() as Context).packageManager }
         single { PreferenceManager.getDefaultSharedPreferences(get()) }
         single { ScreenUtils() }
+        single { SunriseSunsetWrapper() }
     }
 
     val weatherModule = module {
@@ -64,7 +66,7 @@ class LauncherApplication : Application() {
 
     val viewModelModule = module {
         viewModel { AirlyViewModel(get(), get(), get(), get()) }
-        viewModel { SunriseSunsetViewModel(get()) }
+        viewModel { SunriseSunsetViewModel(get(), get()) }
         viewModel { ScreenOnViewModel(get()) }
         viewModel { WeatherViewModel(get(), get(), get()) }
         viewModel { ApplicationsViewModel(get(), get()) }

@@ -5,6 +5,7 @@ import androidx.arch.core.executor.testing.InstantTaskExecutorRule
 import androidx.lifecycle.Observer
 import com.darekbx.launcher3.TestCoroutineRule
 import com.darekbx.launcher3.location.LocationProvider
+import com.darekbx.launcher3.utils.SunriseSunsetWrapper
 import com.nhaarman.mockitokotlin2.*
 import junit.framework.TestCase
 import kotlinx.coroutines.ExperimentalCoroutinesApi
@@ -32,30 +33,37 @@ class SunriseSunsetViewModelTest : TestCase() {
     private lateinit var observer: Observer<SunriseSunsetViewModel.SunriseSunsetData>
 
     @Test
-    fun `Sunrise and sunset have correct values`() {
-        testCoroutineRule.runBlockingTest {
-            // Given
-            val location = mock<Location> {
-                on { latitude } doReturn 21.0
-                on { longitude } doReturn 50.0
-            }
+    fun `Sunrise and sunset have correct values`() = testCoroutineRule.runBlockingTest {
+        // Given
+        val sunriseSunsetWrapper = mock<SunriseSunsetWrapper>()
+        val location = mock<Location> {
+            on { latitude } doReturn 21.0
+            on { longitude } doReturn 50.0
+        }
 
-            doReturn(location).whenever(locationProvider).currentLocation()
+        doReturn(location).whenever(locationProvider).currentLocation()
 
-            val calendar = Calendar.Builder().setDate(2020, 5, 25).build()
-            val sunsetViewModel = SunriseSunsetViewModel(locationProvider, calendar)
+        doReturn(
+            arrayOf(
+                Calendar.Builder().setTimeOfDay(4, 31, 0).build(),
+                Calendar.Builder().setTimeOfDay(21, 48, 0).build(),
+            )
+        ).whenever(sunriseSunsetWrapper).getSunriseSunset(any(), any(), any())
 
-            // When
-            sunsetViewModel.sunriseSunset().observeForever(observer)
+        val calendar = Calendar.Builder().setDate(2020, 5, 25).build()
+        val sunsetViewModel =
+            SunriseSunsetViewModel(locationProvider, sunriseSunsetWrapper, calendar)
 
-            // Then
-            val captor = argumentCaptor<SunriseSunsetViewModel.SunriseSunsetData>()
-            verify(observer, times(1)).onChanged(captor.capture())
+        // When
+        sunsetViewModel.sunriseSunset().observeForever(observer)
 
-            with(captor.firstValue) {
-                assertEquals("04:01", sunrise)
-                assertEquals("17:26", sunset)
-            }
+        // Then
+        val captor = argumentCaptor<SunriseSunsetViewModel.SunriseSunsetData>()
+        verify(observer, times(1)).onChanged(captor.capture())
+
+        with(captor.firstValue) {
+            assertEquals("04:31", sunrise)
+            assertEquals("21:48", sunset)
         }
     }
 }
