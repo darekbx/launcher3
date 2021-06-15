@@ -1,6 +1,7 @@
 package com.darekbx.launcher3.viewmodel
 
 import android.graphics.Bitmap
+import android.util.MalformedJsonException
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
@@ -41,6 +42,9 @@ class WeatherViewModel(
                 e.printStackTrace()
                 error.postValue(e)
             } catch (e: IllegalStateException) {
+                e.printStackTrace()
+                error.postValue(e)
+            } catch (e: MalformedJsonException) {
                 e.printStackTrace()
                 error.postValue(e)
             }
