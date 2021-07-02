@@ -78,7 +78,12 @@ class AirlyViewModel(
                             Timber.e("Unabled to load measurements")
                             error.postValue(true)
                         }
-                        else -> measurements.postValue(measurementsWrapper.value!!)
+                        else -> {
+                            val data = measurementsWrapper.value!!
+                            if (data.temperature.isNotBlank()) {
+                                measurements.postValue(data)
+                            }
+                        }
                     }
                 }
             }
