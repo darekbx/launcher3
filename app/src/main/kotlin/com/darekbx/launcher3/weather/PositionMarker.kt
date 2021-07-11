@@ -13,13 +13,36 @@ class PositionMarker {
 
     fun draw(x: Float, y: Float, image: Bitmap) {
         val canvas = Canvas(image)
-        canvas.drawCircle(x - DOT_RADIUS, y - DOT_RADIUS, DOT_RADIUS, markerPaint)
+        canvas.drawLine(0F, y - DOT_RADIUS, 1200F, y - DOT_RADIUS, linePaint)
+        canvas.drawLine(x - DOT_RADIUS, 0F, x - DOT_RADIUS, 1200F, linePaint)
+        canvas.drawCircle(
+            x - DOT_RADIUS,
+            y - DOT_RADIUS,
+            DOT_RADIUS,
+            markerPaint.apply { color = Color.BLACK })
+        canvas.drawCircle(
+            x - DOT_RADIUS,
+            y - DOT_RADIUS,
+            1F,
+            markerPaint.apply { color = Color.WHITE })
+
     }
 
     private val markerPaint by lazy {
         Paint().apply {
+            style = Paint.Style.STROKE
             isAntiAlias = true
-            color = Color.RED
+            strokeWidth = 2F
+            color = Color.BLACK
+        }
+    }
+
+
+    private val linePaint by lazy {
+        Paint().apply {
+            isAntiAlias = false
+            strokeWidth = 1F
+            color = Color.argb(41, 255, 255, 255)
         }
     }
 }
