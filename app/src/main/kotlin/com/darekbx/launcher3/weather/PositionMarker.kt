@@ -9,12 +9,12 @@ class PositionMarker {
 
     companion object {
         private const val DOT_RADIUS = 3F
+        private const val CROSSHAIR_SIZE = 50F
     }
 
     fun draw(x: Float, y: Float, image: Bitmap) {
         val canvas = Canvas(image)
-        canvas.drawLine(0F, y - DOT_RADIUS, 1200F, y - DOT_RADIUS, linePaint)
-        canvas.drawLine(x - DOT_RADIUS, 0F, x - DOT_RADIUS, 1200F, linePaint)
+        drawCrosshair(canvas, x, y)
         canvas.drawCircle(
             x - DOT_RADIUS,
             y - DOT_RADIUS,
@@ -26,6 +26,23 @@ class PositionMarker {
             1F,
             markerPaint.apply { color = Color.WHITE })
 
+    }
+
+    private fun drawCrosshair(canvas: Canvas, x: Float, y: Float) {
+        canvas.drawLine(
+            x - CROSSHAIR_SIZE,
+            y - DOT_RADIUS,
+            x + CROSSHAIR_SIZE,
+            y - DOT_RADIUS,
+            linePaint
+        )
+        canvas.drawLine(
+            x - DOT_RADIUS,
+            y - CROSSHAIR_SIZE,
+            x - DOT_RADIUS,
+            y + CROSSHAIR_SIZE,
+            linePaint
+        )
     }
 
     private val markerPaint by lazy {
@@ -42,7 +59,7 @@ class PositionMarker {
         Paint().apply {
             isAntiAlias = false
             strokeWidth = 1F
-            color = Color.argb(41, 255, 255, 255)
+            color = Color.argb(42, 255, 255, 255)
         }
     }
 }
