@@ -68,7 +68,7 @@ class ActionIconsFragment : Fragment() {
     }
 
     private fun openDotpad() {
-        startActvivityByPackageName("com.dotpad2")
+        startActvivityByPackageName("com.darekbx.dotpad3")
     }
 
     private fun displayDotsCount(count: Int) {

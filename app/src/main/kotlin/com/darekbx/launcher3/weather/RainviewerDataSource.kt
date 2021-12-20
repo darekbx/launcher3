@@ -28,26 +28,31 @@ class RainviewerDataSource(
 
     override suspend fun downloadRainPrediction(lat: Double, lng: Double): Bitmap =
         suspendCoroutine { continuation ->
-            val weatherInfo = downloadWeatherInfo()
-            when (val newestNowcast = weatherInfo.radar.nowcast.maxByOrNull { it.time }) {
-                null -> continuation.resumeWithException(IllegalStateException("There are no newcasts"))
-                else -> {
-                    val weatherTile = downloadWeatherTile(
-                        weatherInfo.host,
-                        newestNowcast.path,
-                        lat,
-                        lng
-                    )
-                    positionMarker.draw(
-                        weatherTile.width / 2F,
-                        weatherTile.height / 2F,
-                        weatherTile
-                    )
+            try {
+                val weatherInfo = downloadWeatherInfo()
+                when (val newestNowcast = weatherInfo.radar.nowcast.maxByOrNull { it.time }) {
+                    null -> continuation.resumeWithException(IllegalStateException("There are no newcasts"))
+                    else -> {
+                        val weatherTile = downloadWeatherTile(
+                            weatherInfo.host,
+                            newestNowcast.path,
+                            lat,
+                            lng
+                        )
+                        positionMarker.draw(
+                            weatherTile.width / 2F,
+                            weatherTile.height / 2F,
+                            weatherTile
+                        )
 
-                    val screenWidth = screenUtils.screenWidth
-                    val resizedTile = Bitmap.createScaledBitmap(weatherTile, screenWidth, screenWidth, false)
-                    continuation.resume(resizedTile)
+                        val screenWidth = screenUtils.screenWidth
+                        val resizedTile =
+                            Bitmap.createScaledBitmap(weatherTile, screenWidth, screenWidth, false)
+                        continuation.resume(resizedTile)
+                    }
                 }
+            } catch (e: Exception) {
+                continuation.resumeWithException(e)
             }
         }
 

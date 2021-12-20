@@ -36,7 +36,7 @@
             android:enabled="true"
             android:exported="true">
             <intent-filter>
-                <action android:name="com.dotpad2.Refresh" />
+                <action android:name="com.darekbx.dotpad3.Refresh" />
             </intent-filter>
         </receiver>
 
