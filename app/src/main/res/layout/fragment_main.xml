@@ -51,6 +51,16 @@
         />
 
     <ImageView
+        android:id="@+id/open_own_space"
+        android:layout_width="62dp"
+        android:layout_height="62dp"
+        app:layout_constraintBottom_toTopOf="@id/global_refresh"
+        app:layout_constraintEnd_toEndOf="parent"
+        android:src="@drawable/ic_apps"
+        android:contentDescription="@string/app_name"
+        android:padding="16dp"
+        />
+    <ImageView
         android:id="@+id/global_refresh"
         android:layout_width="62dp"
         android:layout_height="62dp"

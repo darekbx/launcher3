@@ -51,6 +51,7 @@ class MainFragment : Fragment() {
         super.onViewCreated(view, savedInstanceState)
 
         bindGlobalRefreshButton()
+        bindAppsButton()
         bindWeatherSwitch()
         bindSettingsButton()
 
@@ -113,6 +114,12 @@ class MainFragment : Fragment() {
         }
     }
 
+    private fun bindAppsButton() {
+        binding.openOwnSpace.setOnClickListener {
+            startActvivityByPackageName("com.darekbx.ownspace")
+        }
+    }
+
     private fun globalRefresh() {
         childFragmentManager.fragments
             .filter { it is RefreshableFragment }
@@ -140,5 +147,14 @@ class MainFragment : Fragment() {
 
     private val settingsPreferences by lazy {
         PreferenceManager.getDefaultSharedPreferences(requireContext())
+    }
+
+    private fun startActvivityByPackageName(packageName: String) {
+        val launchIntent = activity
+            ?.packageManager
+            ?.getLaunchIntentForPackage(packageName)
+        if (launchIntent != null) {
+            startActivity(launchIntent)
+        }
     }
 }
