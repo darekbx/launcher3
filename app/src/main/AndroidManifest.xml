@@ -1,5 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
     package="com.darekbx.launcher3">
 
     <uses-permission android:name="android.permission.INTERNET" />
@@ -20,7 +21,9 @@
             android:name=".ui.DrawerActivity"
             android:stateNotNeeded="true"
             android:launchMode="singleTask"
-            android:screenOrientation="portrait">
+            android:exported="false"
+            android:screenOrientation="portrait"
+            tools:ignore="LockedOrientationActivity">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN"/>
                 <category android:name="android.intent.category.HOME"/>
@@ -30,11 +33,14 @@
 
         <activity
             android:name=".ui.settings.SettingsActivity"
-            android:screenOrientation="portrait" />
+            android:exported="false"
+            android:screenOrientation="portrait"
+            tools:ignore="LockedOrientationActivity" />
 
         <receiver android:name=".dotpad.DotsReceiver"
             android:enabled="true"
-            android:exported="true">
+            android:exported="true"
+            tools:ignore="ExportedReceiver">
             <intent-filter>
                 <action android:name="com.darekbx.dotpad3.Refresh" />
             </intent-filter>

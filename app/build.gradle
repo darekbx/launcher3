@@ -8,13 +8,13 @@ apply from: "$rootDir/dependencies.gradle"
 apply from: "$rootDir/detekt.gradle"
 
 android {
-    compileSdkVersion 30
+    compileSdkVersion 33
     buildToolsVersion "30.0.3"
 
     defaultConfig {
         applicationId "com.darekbx.launcher3"
         minSdkVersion 28
-        targetSdkVersion 28
+        targetSdkVersion 33
         versionCode 1
         versionName "1.0"
 
